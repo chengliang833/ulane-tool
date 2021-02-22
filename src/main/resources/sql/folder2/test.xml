@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<sqls>
+	<file id="h">
+	    <sql id="b">
+	        SELECT count(0) VAL
+	        FROM TABLE
+	        WHERE 1 &lt;= 2
+	    </sql>
+	</file>
+	<file id="u">
+	    <sql id="d">
+	        SELECT count(0) VAL
+	        FROM TABLE
+	        WHERE 1 &lt;= 2
+	    </sql>
+	</file>
+</sqls>
+
