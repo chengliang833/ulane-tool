@@ -57,7 +57,7 @@ public class ConvertUtil {
 	
 	// outputStream转inputStream
 	public static ByteArrayInputStream parse(OutputStream output) {
-		byte[] data = steamToByte(output);
+		byte[] data = streamToByte(output);
 		ByteArrayInputStream swapStream = new ByteArrayInputStream(data);
 		return swapStream;
 	}
@@ -70,7 +70,7 @@ public class ConvertUtil {
 		return data;
 	}
 	
-	public static byte[] steamToByte(OutputStream output) {
+	public static byte[] streamToByte(OutputStream output) {
 		ByteArrayOutputStream baos = (ByteArrayOutputStream) output;
 		return baos.toByteArray();
 	}
@@ -119,7 +119,7 @@ public class ConvertUtil {
 	// OutputStream转String
 	public static String parseString(OutputStream output) {
 		String result = null;
-		byte[] data = steamToByte(output);
+		byte[] data = streamToByte(output);
 		try {
 			result = new String(data, "utf-8");
 		} catch (UnsupportedEncodingException e) {

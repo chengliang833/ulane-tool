@@ -313,18 +313,21 @@
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
 			<version>1.4</version>
+			<optional>true</optional>
 		</dependency>
 		
 		<dependency>
 		    <groupId>org.openjdk.jol</groupId>
 		    <artifactId>jol-core</artifactId>
 		    <version>0.9</version>
+			<optional>true</optional>
 		</dependency>
 		
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>1.2.3</version>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 	
