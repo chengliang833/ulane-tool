@@ -329,6 +329,11 @@
 			<version>1.2.3</version>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+		    <groupId>com.oracle.ojdbc</groupId>
+		    <artifactId>ojdbc8</artifactId>
+		    <version>19.3.0.0</version>
+		</dependency>
 	</dependencies>
 	
 	<build>
