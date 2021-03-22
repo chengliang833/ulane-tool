@@ -2,7 +2,6 @@ package wang.ulane.custom.script;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import wang.ulane.file.ConvertUtil;
@@ -10,15 +9,15 @@ import wang.ulane.file.FileManage;
 
 public class EclipseTerminalStr {
 	
-	public static void execute(String filePath, Boolean justFile) throws Exception{
-		if(filePath == null){
-			filePath = "C:\\Develop\\Install\\eclipse_mars2\\workspace\\.metadata\\.plugins\\org.eclipse.e4.workbench\\workbench.xmi";
-			justFile = false;
+	public static void execute(String filePath, Boolean goFile) throws Exception{
+//		if(filePath == null){
+//			filePath = "C:\\Develop\\Install\\eclipse_mars2\\workspace\\.metadata\\.plugins\\org.eclipse.e4.workbench\\workbench.xmi";
+//			goFile = false;
+//		}
+		if(goFile == null){
+			goFile = false;
 		}
-		if(justFile == null){
-			justFile = false;
-		}
-		if(justFile){
+		if(goFile){
 			filePath = filePath + "\\.metadata\\.plugins\\org.eclipse.e4.workbench\\workbench.xmi";
 		}
 		String xmiStr = ConvertUtil.parseString(new FileInputStream(new File(filePath)));

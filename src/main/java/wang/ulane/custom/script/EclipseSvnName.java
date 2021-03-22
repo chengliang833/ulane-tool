@@ -5,9 +5,9 @@ import java.io.File;
 public class EclipseSvnName {
 	
 	public static void execute(String folderPath){
-		if(folderPath == null){
-			folderPath = "C:\\Develop\\Install\\eclipse_mars2\\dropins";
-		}
+//		if(folderPath == null){
+//			folderPath = "C:\\Develop\\Install\\eclipse_mars2\\dropins";
+//		}
 		File folder = new File(folderPath);
 		for(File file:folder.listFiles()){
 //			System.out.println(file.getName());

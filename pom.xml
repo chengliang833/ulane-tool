@@ -349,9 +349,9 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<!-- <mainClass>wang.ulane.custom.script.CustomAll</mainClass> -->
+							<mainClass>wang.ulane.custom.script.CustomAll</mainClass>
 							<!-- <mainClass>wang.ulane.xml.XmlLoad</mainClass> -->
-							<mainClass>wang.ulane.file.TraverseFileFromSign</mainClass>
+							<!-- <mainClass>wang.ulane.file.TraverseFileFromSign</mainClass> -->
 						</manifest>
 					</archive>
 					<descriptorRefs>

@@ -18,9 +18,9 @@ import wang.ulane.file.ConvertUtil;
 public class EclipseTerminalDocument {
 	
 	public static void execute(String filePath) throws Exception{
-		if(filePath == null){
-			filePath = "C:\\Develop\\Install\\eclipse_mars2\\workspace\\.metadata\\.plugins\\org.eclipse.e4.workbench\\workbench.xmi";
-		}
+//		if(filePath == null){
+//			filePath = "C:\\Develop\\Install\\eclipse_mars2\\workspace\\.metadata\\.plugins\\org.eclipse.e4.workbench\\workbench.xmi";
+//		}
 		//或saxreader
 		String xmiStr = ConvertUtil.parseString(new FileInputStream(new File(filePath)));
 		Document doc = DocumentHelper.parseText(xmiStr);
