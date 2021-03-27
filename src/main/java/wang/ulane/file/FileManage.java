@@ -11,6 +11,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.commons.io.FileUtils;
+
 public class FileManage {
 	
 	public static BufferedInputStream loadInputStream(String path) throws FileNotFoundException{
@@ -18,12 +20,14 @@ public class FileManage {
 	}
 	
 	public static void saveFile(String path, String str) throws IOException {
-		saveFile(path, str.getBytes("utf-8"));
+//		saveFile(path, str.getBytes("utf-8"));
+		FileUtils.writeStringToFile(new File(path), str, "utf-8");
 	}
 	
 	public static void saveFile(String path, byte[] bytes) throws IOException {
-		ByteArrayInputStream bais = ConvertUtil.parseInputStream(bytes);
-		saveFile(path, bais);
+//		ByteArrayInputStream bais = ConvertUtil.parseInputStream(bytes);
+//		saveFile(path, bais);
+		FileUtils.writeByteArrayToFile(new File(path), bytes);
 	}
 	
 	public static void saveFile(String path, InputStream is) throws IOException{
