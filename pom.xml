@@ -5,6 +5,21 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
   
+	<profiles>
+		<profile>
+			<id>dit</id>
+			<properties>
+				<environment>dit</environment>
+			</properties>
+		</profile>
+		<profile>
+			<id>prd</id>
+			<properties>
+				<environment>prd</environment>
+			</properties>
+		</profile>
+	</profiles>
+  
 	<repositories>
 		<repository>
 			<id>www.ebi.ac.uk</id>
@@ -338,6 +353,15 @@
 	</dependencies>
 	
 	<build>
+		<resources>
+			<resource>
+				<directory>${project.basedir}/src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>${project.basedir}/src/main/resources-filtered/${environment}</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 	    <plugins>
 			<plugin>
 			  <groupId>org.apache.maven.plugins</groupId>
