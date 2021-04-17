@@ -237,12 +237,12 @@
 			<optional>true</optional>
 		</dependency>
 		
-		<dependency>
+<!-- 		<dependency>
 		    <groupId>javax.servlet</groupId>
 		    <artifactId>servlet-api</artifactId>
 		    <version>2.3</version>
 			<optional>true</optional>
-		</dependency>
+		</dependency> -->
 		
 		<dependency>
 			<groupId>commons-dbcp</groupId>
@@ -355,6 +355,13 @@
 			<groupId>org.apache.ftpserver</groupId>
 			<artifactId>ftpserver-core</artifactId>
 			<version>1.1.1</version>
+			<optional>true</optional>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.javassist</groupId>
+		    <artifactId>javassist</artifactId>
+		    <version>3.27.0-GA</version>
 			<optional>true</optional>
 		</dependency>
 	</dependencies>
