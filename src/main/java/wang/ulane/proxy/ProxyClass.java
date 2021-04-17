@@ -140,11 +140,11 @@ public class ProxyClass {
 		}else{
 //			if(m.getReturnType() instanceof CtPrimitiveType){//还是要区分boolean，干脆直接判断
 			if(init0.contains(returnTypeName)){
-				mStr.append(m.getReturnType().getName()).append(" result = 0;");
+				mStr.append(returnTypeName).append(" result = 0;");
 			}else if(initFalse.equals(returnTypeName)){
-				mStr.append(m.getReturnType().getName()).append(" result = false;");
+				mStr.append(returnTypeName).append(" result = false;");
 			}else{
-				mStr.append(m.getReturnType().getName()).append(" result = null;");
+				mStr.append(returnTypeName).append(" result = null;");
 			}
 			mStr.append(beforeBody);
 			mStr.append("result = ");
