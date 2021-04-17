@@ -17,14 +17,14 @@ public class TestMain {
 	}
 	public static void main(String[] args) throws Exception {
 		BeanTest.test();
-//		System.out.println("---");
-//		new BeanTest().test(5,6);
-//		System.out.println("---");
-//		System.out.println(new BeanTest().test(5, 6, 7));
-//		System.out.println("---");
-//		System.out.println(new BeanTest().testChar(3));
-//		System.out.println("---");
-//		System.out.println(new BeanTest().testBoolean(3));
+		System.out.println("---");
+		new BeanTest().test(5,6);
+		System.out.println("---");
+		System.out.println(new BeanTest().test(5, 6, 7));
+		System.out.println("---");
+		System.out.println(new BeanTest().testChar(3));
+		System.out.println("---");
+		System.out.println(new BeanTest().testBoolean(3));
 	}
 	
 }

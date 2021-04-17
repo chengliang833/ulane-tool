@@ -45,7 +45,7 @@ public class ProxyClass {
 		}
 	}
 	
-	public static void proxyMethod(CtClass ct, ClassPool pool, String methodName, @SuppressWarnings("rawtypes") Class[] params, String beforeBody, String afterBody) throws Exception{
+	private static void proxyMethod(CtClass ct, ClassPool pool, String methodName, @SuppressWarnings("rawtypes") Class[] params, String beforeBody, String afterBody) throws Exception{
 		CtMethod m = null;
 		CtClass[] ctParams = null;
 		if(params != null && params.length > 0){
@@ -59,8 +59,14 @@ public class ProxyClass {
 			m = ct.getDeclaredMethod(methodName);
 		}
 		
-		createProxyMethod(m, methodName, ctParams, ct);
-		changeOriginalMethod(m, methodName, ctParams, ct, beforeBody, afterBody);
+		//无返回值直接前后加就行，放弃，兼容ProxyClassLog前后变量关联
+//		if(m.getReturnType().getName().equals("void")){
+//			m.insertBefore(beforeBody);
+//			m.insertAfter("String result = null;"+afterBody);
+//		}else{
+			createProxyMethod(m, methodName, ctParams, ct);
+			changeOriginalMethod(m, methodName, ctParams, ct, beforeBody, afterBody);
+//		}
 	}
 	
 	/**
@@ -71,8 +77,8 @@ public class ProxyClass {
 	 * @param ct
 	 * @throws Exception
 	 */
-	public static void createProxyMethod(CtMethod m, String methodName, CtClass[] ctParams, CtClass ct) throws Exception{
-		CtMethod m2 = new CtMethod(m.getReturnType(), methodName+"Proxy", ctParams, ct);
+	private static void createProxyMethod(CtMethod m, String methodName, CtClass[] ctParams, CtClass ct) throws Exception{
+		CtMethod m2 = new CtMethod(m.getReturnType(), methodName+"Proxy___", ctParams, ct);
 		
 //		System.out.println(m.getReturnType().getName());
 		
@@ -108,9 +114,9 @@ public class ProxyClass {
 	 * @param afterBody
 	 * @throws Exception
 	 */
-	public static List<String> init0 = Arrays.asList("byte","short","int","long","float","double","char");
-	public static String initFalse = "boolean";
-	public static void changeOriginalMethod(CtMethod m, String methodName, CtClass[] ctParams, CtClass ct, String beforeBody, String afterBody) throws Exception{
+	private static List<String> init0 = Arrays.asList("byte","short","int","long","float","double","char");
+	private static String initFalse = "boolean";
+	private static void changeOriginalMethod(CtMethod m, String methodName, CtClass[] ctParams, CtClass ct, String beforeBody, String afterBody) throws Exception{
 		if(beforeBody == null){
 			beforeBody = "";
 		}
@@ -129,7 +135,7 @@ public class ProxyClass {
 		if(returnTypeName.equals("void")){
 			mStr.append("String result = null;");
 			mStr.append(beforeBody);
-			mStr.append(methodName).append("Proxy(").append(bodyInvoke).append(");");
+			mStr.append(methodName).append("Proxy___(").append(bodyInvoke).append(");");
 			mStr.append(afterBody);
 		}else{
 //			if(m.getReturnType() instanceof CtPrimitiveType){//还是要区分boolean，干脆直接判断
@@ -142,7 +148,7 @@ public class ProxyClass {
 			}
 			mStr.append(beforeBody);
 			mStr.append("result = ");
-			mStr.append(methodName).append("Proxy(").append(bodyInvoke).append(");");
+			mStr.append(methodName).append("Proxy___(").append(bodyInvoke).append(");");
 			mStr.append(afterBody);
 			mStr.append("return result;");
 		}
@@ -164,7 +170,7 @@ public class ProxyClass {
 	 * @param declareStr
 	 * @param invokeStr
 	 */
-	public static void generateParamDeclareInvoke(CtClass[] ctParams, StringBuilder declareStr, StringBuilder invokeStr){
+	private static void generateParamDeclareInvoke(CtClass[] ctParams, StringBuilder declareStr, StringBuilder invokeStr){
 		if(ctParams != null && ctParams.length > 0){
 			for(int i=0,length=ctParams.length; i< length; i++){
 				if(i != 0){
