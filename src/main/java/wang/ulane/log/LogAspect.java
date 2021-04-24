@@ -14,12 +14,20 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONObject;
 
 public class LogAspect {
-	
-	@Value("${log.return.length:1000}")
-	private Integer returnLength;
-	
 	protected static Logger log = LoggerFactory.getLogger(LogAspect.class);
 	
+	private static Integer returnLength = 1000;
+	private static Integer paramsLength = 1000;
+	
+	@Value("${log.return.length:1000}")
+	public void setReturnLength(Integer returnLength) {
+		LogAspect.returnLength = returnLength;
+	}
+	@Value("${log.params.length:1000}")
+	public void setParamsLength(Integer paramsLength) {
+		LogAspect.paramsLength = paramsLength;
+	}
+
 	public Object controllerAroundInvoke(ProceedingJoinPoint joinPoint) throws Throwable{
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
@@ -65,15 +73,18 @@ public class LogAspect {
 		return result;
     }
     
-    protected void printLogBeforeProceed(String target, String params){
+    public static void printLogBeforeProceed(String target, String params){
+    	if(params.length() > paramsLength){
+    		params = params.substring(0,paramsLength)+"......";
+    	}
     	log.info("开始{}调用--> {} 参数:{}", Thread.currentThread().getName(), target, params);
     }
     
-    protected void printStreamLogAfterProceed(String target, long timeConsuming, Object result){
+    public static void printStreamLogAfterProceed(String target, long timeConsuming, Object result){
     	log.info("结束{}调用<-- {} 返回值:{} 耗时:{}ms", Thread.currentThread().getName(), target, "InputStreamResource 不打印", timeConsuming);
     }
     
-    protected void printObjectLogAfterProceed(String target, long timeConsuming, Object result){
+    public static void printObjectLogAfterProceed(String target, long timeConsuming, Object result){
         //返回值太多了，需要看再打印，如果为空是空字符串
     	String resultStr = JSONObject.toJSONString(result);
     	if(resultStr.length() > returnLength){

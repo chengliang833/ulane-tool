@@ -6,6 +6,10 @@ public class BeanTest {
 		System.out.println(2343);
 		System.out.println(3243);
 	}
+
+	public void test(int i){
+		System.out.println(i);
+	}
 	
 	public void test(Integer i){
 		System.out.println(i);
@@ -37,17 +41,20 @@ public class BeanTest {
 //		System.out.println(b);
 //	}
 //	public void test(java.lang.Integer arg0, java.lang.Integer arg1) {
-//		com.alibaba.fastjson.JSONArray arr = new com.alibaba.fastjson.JSONArray();
+//		//编译无泛型
+//		java.util.List arr = new java.util.ArrayList();
 //		arr.add(arg0);
 //		arr.add(arg1);
-//		StringBuilder targetMethod = new StringBuilder("top.ulane.springtest.aop.test.BeanTest").append(":").append("test");
+//		String targetMethod = new StringBuilder("top.ulane.springtest.aop.test.BeanTest").append(":").append("test").toString();
 //		long start = System.currentTimeMillis();
-//		StringBuilder startStr = new StringBuilder("开始").append(Thread.currentThread().getName()).append("调用--> ").append(targetMethod).append(" 参数:").append(arr.toJSONString());
-//		System.out.println(startStr);
+////		StringBuilder startStr = new StringBuilder("开始").append(Thread.currentThread().getName()).append("调用--> ").append(targetMethod).append(" 参数:").append(com.alibaba.fastjson.JSON.toJSONString(arr));
+////		System.out.println(startStr);
+//		wang.ulane.log.LogAspect.printLogBeforeProceed(targetMethod,com.alibaba.fastjson.JSON.toJSONString(arr));
 //		Integer result = null;
 //		testProxy(arg0, arg1);
-//		StringBuilder endStr = new StringBuilder("结束").append(Thread.currentThread().getName()).append("调用<-- ").append(targetMethod).append(" 返回值:").append(String.valueOf(result)).append(" 耗时:").append(System.currentTimeMillis() - start).append("ms");
-//		System.out.println(endStr);
+////		StringBuilder endStr = new StringBuilder("结束").append(Thread.currentThread().getName()).append("调用<-- ").append(targetMethod).append(" 返回值:").append(String.valueOf(result)).append(" 耗时:").append(System.currentTimeMillis() - start).append("ms");
+////		System.out.println(endStr);
+//		wang.ulane.log.LogAspect.printObjectLogAfterProceed(targetMethod, System.currentTimeMillis() - start, result);
 //		
 ////		System.out.println("开始" + Thread.currentThread().getName() + "调用--> " + targetMethod + " 参数:" + arr.toJSONString());
 ////		System.out.println("结束" + Thread.currentThread().getName() + "调用<-- " + targetMethod + " 返回值:" + String.valueOf(result) + " 耗时:" + (System.currentTimeMillis() - start) + "ms");

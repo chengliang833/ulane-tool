@@ -1,13 +1,17 @@
 package wang.ulane.proxy;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
+import javassist.NotFoundException;
 
 public class ProxyClass {
 	
@@ -46,19 +50,11 @@ public class ProxyClass {
 	}
 	
 	private static void proxyMethod(CtClass ct, ClassPool pool, String methodName, @SuppressWarnings("rawtypes") Class[] params, String beforeBody, String afterBody) throws Exception{
-		CtMethod m = null;
 		CtClass[] ctParams = null;
 		if(params != null && params.length > 0){
 			ctParams = new CtClass[params.length];
-			for(int i=0,length=params.length; i<length; i++){
-				ctParams[i] = pool.getCtClass(params[i].getCanonicalName());
-			}
-			// 获取被修改的方法
-			m = ct.getDeclaredMethod(methodName, ctParams);
-		}else{
-			m = ct.getDeclaredMethod(methodName);
 		}
-		
+		CtMethod m = getSignMethod(pool, methodName, params, ctParams, ct);
 		//无返回值直接前后加就行，放弃，兼容ProxyClassLog前后变量关联
 //		if(m.getReturnType().getName().equals("void")){
 //			m.insertBefore(beforeBody);
@@ -67,6 +63,20 @@ public class ProxyClass {
 			createProxyMethod(m, methodName, ctParams, ct);
 			changeOriginalMethod(m, methodName, ctParams, ct, beforeBody, afterBody);
 //		}
+	}
+	
+	protected static CtMethod getSignMethod(ClassPool pool, String methodName, @SuppressWarnings("rawtypes") Class[] params, CtClass[] ctParams, CtClass ct) throws NotFoundException{
+		CtMethod m = null;
+		if(params != null && params.length > 0){
+			for(int i=0,length=params.length; i<length; i++){
+				ctParams[i] = pool.getCtClass(params[i].getCanonicalName());
+			}
+			// 获取被修改的方法
+			m = ct.getDeclaredMethod(methodName, ctParams);
+		}else{
+			m = ct.getDeclaredMethod(methodName);
+		}
+		return m;
 	}
 	
 	/**
@@ -114,8 +124,6 @@ public class ProxyClass {
 	 * @param afterBody
 	 * @throws Exception
 	 */
-	private static List<String> init0 = Arrays.asList("byte","short","int","long","float","double","char");
-	private static String initFalse = "boolean";
 	private static void changeOriginalMethod(CtMethod m, String methodName, CtClass[] ctParams, CtClass ct, String beforeBody, String afterBody) throws Exception{
 		if(beforeBody == null){
 			beforeBody = "";
@@ -138,10 +146,11 @@ public class ProxyClass {
 			mStr.append(methodName).append("Proxy___(").append(bodyInvoke).append(");");
 			mStr.append(afterBody);
 		}else{
+//			Integer.class.getField("TYPE").get(null)//int.class
 //			if(m.getReturnType() instanceof CtPrimitiveType){//还是要区分boolean，干脆直接判断
-			if(init0.contains(returnTypeName)){
+			if(PrimitiveEnum.initPrimitive0.contains(returnTypeName)){
 				mStr.append(returnTypeName).append(" result = 0;");
-			}else if(initFalse.equals(returnTypeName)){
+			}else if(PrimitiveEnum.initPrimitiveFalse.equals(returnTypeName)){
 				mStr.append(returnTypeName).append(" result = false;");
 			}else{
 				mStr.append(returnTypeName).append(" result = null;");
@@ -154,9 +163,15 @@ public class ProxyClass {
 		}
 		mStr.append("}");
 		
+		String funcStr = mStr.toString();
+		if(PrimitiveEnum.checkPrimitive(returnTypeName)){
+			funcStr = funcStr.replaceAll("\\$\\{returnwrapper-(.*?)\\}", PrimitiveEnum.valueOf("_"+returnTypeName).getWrapper()+".valueOf($1)");
+		}else{
+			funcStr = funcStr.replaceAll("\\$\\{returnwrapper-(.*?)\\}", "$1");
+		}
 		//直接setBody不能对应形参名
 //		m3.setBody(methodBody.toString());
-		CtMethod m3 = CtMethod.make(mStr.toString(), ct);
+		CtMethod m3 = CtMethod.make(funcStr, ct);
 //		m3.getMethodInfo().setAccessFlags(m3.getMethodInfo().getAccessFlags() | AccessFlag.STATIC);
 		m3.getMethodInfo().setAccessFlags(m.getMethodInfo().getAccessFlags());
 		
@@ -184,13 +199,63 @@ public class ProxyClass {
 	}
 
 	
+	public static Map<String, List<MethodParam>> getMethodList(String pathName, String paramStart){
+        try {
+        	Map<String, List<MethodParam>> map = new HashMap<>();
+        	
+        	Properties prop = new Properties();
+            prop.load(ProxyClass.class.getClassLoader().getResourceAsStream(pathName));
+            Set<Object> propSet = prop.keySet();
+            for(Object keyObj:propSet){
+            	String key = (String) keyObj;
+            	if(key.startsWith(paramStart)){
+            		String propVal = prop.getProperty(key);
+            		if(propVal.endsWith(":")){
+            			propVal = propVal + "-";
+            		}
+            		String[] values = propVal.split(":");
+            		if(values.length < 3){
+            			throw new RuntimeException("配置参数长度缺失:"+key);
+            		}
+            		//类名指定
+            		List<MethodParam> methods = map.get(values[0]);
+            		if(methods == null){
+            			methods = new ArrayList<>();
+            			map.put(values[0], methods);
+            		}
+            		//方法参数指定
+            		@SuppressWarnings("rawtypes")
+					List<Class> clses = new ArrayList<>();
+            		String[] params = values[2].replace("-", "").split(",");
+            		for(String param:params){
+            			if("".equals(param)){
+            				continue;
+            			}else if(PrimitiveEnum.checkPrimitive(param)){
+            				clses.add(PrimitiveEnum.getPrimitiveClass(param));
+            			}else{
+            				clses.add(Class.forName(param));
+            			}
+            		}
+            		//类关联方法
+            		methods.add(new MethodParam(values[1], clses.toArray(new Class[]{})));
+            	}
+            }
+            return map;
+		} catch (Exception e) {
+            throw new RuntimeException("加载配置文件异常!", e);
+		}
+	}
+	
 	
 	
 	/**
 	 * 仅编译需要，通过tomcat启动才需要指定，main（springboot）、@Test启动不需要（加了也没关系）
 	 * @param relateClassPath
 	 */
-	public static void addRelateClassPath(String  relateClassPath) {
+	public static void addRelateClassPath(@SuppressWarnings("rawtypes") Class cls) {
+		ProxyClass.relateClassPaths.add(cls.getProtectionDomain().getCodeSource().getLocation().getPath());
+	}
+	public static void addRelateClassPath(String relateClassPath) {
 		ProxyClass.relateClassPaths.add(relateClassPath);
 	}
 	public static Set<String> getRelateClassPaths() {
