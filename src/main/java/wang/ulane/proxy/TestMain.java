@@ -17,7 +17,7 @@ public class TestMain {
 //				new MethodParam("testChar", Integer.class),
 //				new MethodParam("testBoolean", Integer.class)
 //				);
-		
+		ProxyClass.initClass("app.properties", "log.proxys.initclass");
 		Map<String, List<MethodParam>> map = ProxyClass.getMethodList("app.properties", "log.proxys.list");
 		ProxyClassLog.proxyMethodLog(map);
 	}

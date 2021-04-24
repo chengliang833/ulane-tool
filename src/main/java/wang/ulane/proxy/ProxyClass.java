@@ -208,6 +208,32 @@ public class ProxyClass {
 		}
 	}
 
+
+	public static void initClass(String pathName, String paramStart){
+        try {
+        	Properties prop = new Properties();
+        	InputStream is = ProxyClass.class.getClassLoader().getResourceAsStream(pathName);
+        	if(is == null){
+        		return;
+        	}
+            prop.load(is);
+            Set<Object> propSet = prop.keySet();
+            for(Object keyObj:propSet){
+            	String key = (String) keyObj;
+            	if(key.startsWith(paramStart)){
+            		String propVal = prop.getProperty(key);
+            		String[] values = propVal.split(",");
+            		for(String val:values){
+            			if(!"".equals(val)){
+            				addRelateClassPath(Class.forName(val));
+            			}
+            		}
+            	}
+            }
+		} catch (Exception e) {
+            throw new RuntimeException("加载配置文件异常!", e);
+		}
+	}
 	
 	public static Map<String, List<MethodParam>> getMethodList(String pathName, String paramStart){
         try {
@@ -259,8 +285,6 @@ public class ProxyClass {
             throw new RuntimeException("加载配置文件异常!", e);
 		}
 	}
-	
-	
 	
 	/**
 	 * 仅编译需要，通过tomcat启动才需要指定，main（springboot）、@Test启动不需要（加了也没关系）
