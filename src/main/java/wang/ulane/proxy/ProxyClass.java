@@ -1,5 +1,6 @@
 package wang.ulane.proxy;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -213,7 +214,11 @@ public class ProxyClass {
         	Map<String, List<MethodParam>> map = new HashMap<>();
         	
         	Properties prop = new Properties();
-            prop.load(ProxyClass.class.getClassLoader().getResourceAsStream(pathName));
+        	InputStream is = ProxyClass.class.getClassLoader().getResourceAsStream(pathName);
+        	if(is == null){
+        		return map;
+        	}
+            prop.load(is);
             Set<Object> propSet = prop.keySet();
             for(Object keyObj:propSet){
             	String key = (String) keyObj;
