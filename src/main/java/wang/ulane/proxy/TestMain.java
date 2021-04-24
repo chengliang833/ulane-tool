@@ -23,7 +23,7 @@ public class TestMain {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		BeanTest.test();
+		BeanTest.test(2132L);
 		System.out.println("---");
 		new BeanTest().test(5);
 		System.out.println("---");

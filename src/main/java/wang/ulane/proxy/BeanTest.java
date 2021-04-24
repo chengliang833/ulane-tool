@@ -1,37 +1,42 @@
 package wang.ulane.proxy;
 
 public class BeanTest {
-	
-	public static void test(){
-		System.out.println(2343);
+
+	public static void test() {
 		System.out.println(3243);
 	}
 
-	public void test(int i){
-		System.out.println(i);
+	public static int test(long aaa) {
+		System.out.println(aaa);
+		System.out.println(3243);
+		return 132432;
 	}
-	
-	public void test(Integer i){
+
+	public void test(int i) {
 		System.out.println(i);
 	}
 
-	public void test(Integer i,Integer b){
+	public void test(Integer i) {
+		System.out.println(i);
+	}
+
+	public void test(Integer i, Integer b) {
 		System.out.println(i);
 		System.out.println(b);
 	}
 
-	public int test(Integer i,Integer b,Integer c){
+	public int test(Integer i, Integer b, Integer c) {
 		System.out.println(i);
 		System.out.println(b);
 		return c;
 	}
-	
-	public char testChar(Integer i){
+
+	public char testChar(Integer i) {
 		System.out.println(i);
 		return 9;
 	}
 
-	public boolean testBoolean(Integer i){
+	public boolean testBoolean(Integer i) {
 		System.out.println(i);
 		return false;
 	}

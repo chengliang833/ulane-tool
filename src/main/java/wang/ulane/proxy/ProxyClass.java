@@ -12,6 +12,7 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
+import javassist.bytecode.AccessFlag;
 
 public class ProxyClass {
 	
@@ -134,6 +135,11 @@ public class ProxyClass {
 		StringBuilder bodyInvoke = new StringBuilder();
 		
 		StringBuilder mStr = new StringBuilder("public ");
+		//按位与：m.getMethodInfo().getAccessFlags() & 0b1000
+		if((m.getMethodInfo().getAccessFlags() & AccessFlag.STATIC) == 8){
+			mStr.append("static ");
+		}
+		
 		mStr.append(m.getReturnType().getName()).append(" ");
 		mStr.append(methodName).append("(");
 		generateParamDeclareInvoke(ctParams, mStr, bodyInvoke);
@@ -171,9 +177,12 @@ public class ProxyClass {
 		}
 		//直接setBody不能对应形参名
 //		m3.setBody(methodBody.toString());
+//		System.out.println(funcStr);
 		CtMethod m3 = CtMethod.make(funcStr, ct);
 //		m3.getMethodInfo().setAccessFlags(m3.getMethodInfo().getAccessFlags() | AccessFlag.STATIC);
-		m3.getMethodInfo().setAccessFlags(m.getMethodInfo().getAccessFlags());
+		//CtMethod.make时static会少一个本地变量this，移到上面字符串中判断static
+//		m3.getMethodInfo().setAccessFlags(m.getMethodInfo().getAccessFlags());
+//		m3.setModifiers(m3.getModifiers() | Modifier.VARARGS);
 		
 		ct.removeMethod(m);
 		ct.addMethod(m3);
