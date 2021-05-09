@@ -56,23 +56,40 @@ public class ConvertUtil {
 	}
 	
 	// outputStream转inputStream
-	public static ByteArrayInputStream parse(OutputStream output) {
+	public static ByteArrayInputStream parse(ByteArrayOutputStream output) {
 		byte[] data = streamToByte(output);
 		ByteArrayInputStream swapStream = new ByteArrayInputStream(data);
 		return swapStream;
 	}
 	
 	public static byte[] streamToByte(InputStream input) throws IOException {
-		byte[] data = null;
-		try (ByteArrayOutputStream baos = parse(input)) {
-			data = baos.toByteArray();
+//		byte[] data = null;
+//		try (ByteArrayOutputStream baos = parse(input)) {
+//			data = baos.toByteArray();
+//		}
+		
+		int len = 0;
+		int allLen = 0;
+		int inputLen = input.available();
+		int stepLen = inputLen;
+		if(stepLen > 10240){
+			stepLen = 10240;
 		}
-		return data;
+		
+		byte[] buf = new byte[inputLen];
+		while (allLen < inputLen) {
+			len = input.read(buf, allLen, stepLen);
+			if(len == -1){
+				break;
+			}
+			allLen += len;
+		}
+		
+		return buf;
 	}
 	
-	public static byte[] streamToByte(OutputStream output) {
-		ByteArrayOutputStream baos = (ByteArrayOutputStream) output;
-		return baos.toByteArray();
+	public static byte[] streamToByte(ByteArrayOutputStream output) {
+		return output.toByteArray();
 	}
 
 	// inputStream转String
@@ -111,17 +128,21 @@ public class ConvertUtil {
 	// inputStream转String
 	public static String parseString(InputStream input, String charSet) throws IOException {
 		String result = null;
-		byte[] data = streamToByte(input);
-		result = new String(data, charSet);
-		return result;
+//		byte[] data = streamToByte(input);
+//		result = new String(data, charSet);
+//		return result;
+		
+//		return parse(input).toString(charSet);
+		
+		return new String(streamToByte(input), charSet);
 	}
 
 	// OutputStream转String
-	public static String parseString(OutputStream output) {
+	public static String parseString(ByteArrayOutputStream output) {
 		String result = null;
-		byte[] data = streamToByte(output);
+//		byte[] data = streamToByte(output);
 		try {
-			result = new String(data, "utf-8");
+			result = output.toString("utf-8");
 		} catch (UnsupportedEncodingException e) {
 			log.error(e.getMessage(), e);
 		}
@@ -149,6 +170,14 @@ public class ConvertUtil {
 	public static ByteArrayOutputStream parseOutputStream(byte[] bytes) throws IOException {
 		return parse(parseInputStream(bytes));
 	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public static String toBase64(String in) throws UnsupportedEncodingException {
 		return toBase64(in.getBytes("UTF-8"));

@@ -11,13 +11,20 @@ public class BeanTest {
 		System.out.println(3243);
 		return 132432;
 	}
+	
+	public static int test(Long aaa) {
+		System.out.println(aaa);
+		System.out.println(3243);
+		return 132432;
+	}
 
-	public void test(int i) {
+	public static void test(int i) {
 		System.out.println(i);
 	}
 
-	public void test(Integer i) {
+	public static int test(Integer i) {
 		System.out.println(i);
+		return 1;
 	}
 
 	public void test(Integer i, Integer b) {

@@ -17,21 +17,39 @@ public class TestMain {
 //				new MethodParam("testChar", Integer.class),
 //				new MethodParam("testBoolean", Integer.class)
 //				);
-		ProxyClass.initClass("app.properties", "log.proxys.initclass");
+		ProxyClass.initClass("app.properties", "logext.proxys.initclass");
 		Map<String, List<MethodParam>> map = ProxyClass.getMethodList("app.properties", "log.proxys.list");
 		ProxyClassLog.proxyMethodLog(map);
+		
+//		ProxyClass.proxyMethod("wang.ulane.proxy.BeanTest", 
+//				new MethodParam("test", "wang.ulane.proxy.TestMain.testProxy", Integer.class, Integer.class, Integer.class)
+//				);
 	}
 	
 	public static void main(String[] args) throws Exception {
 		BeanTest.test(2132L);
+		BeanTest.test(new Integer(3));
 		System.out.println("---");
 		new BeanTest().test(5);
+		System.out.println("---");
+		new BeanTest().test(5, 6);
 		System.out.println("---");
 		System.out.println(new BeanTest().test(5, 6, 7));
 		System.out.println("---");
 		System.out.println(new BeanTest().testChar(3));
 		System.out.println("---");
 		System.out.println(new BeanTest().testBoolean(3));
+	}
+	
+	public static Object testProxy(ProxyPoint proxyPoint) throws Exception{
+		//before
+		System.out.println("before");
+		//proceed
+		Object result = proxyPoint.proceed();
+//		Object result = 0;
+		//after
+		System.out.println("after:"+result);
+		return result;
 	}
 	
 }

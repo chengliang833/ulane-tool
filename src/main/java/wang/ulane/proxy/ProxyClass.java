@@ -23,8 +23,9 @@ public class ProxyClass {
 	 */
 	private static Set<String> relateClassPaths = new HashSet<String>();
 	
+	@Deprecated
 	public static void proxyMethod(String classFullName, String methodName, @SuppressWarnings("rawtypes") Class[] params, String beforeBody, String afterBody){
-		proxyMethod(classFullName, new MethodParam(methodName, params, beforeBody, afterBody));
+		proxyMethod(classFullName, new MethodParam(methodName, beforeBody, afterBody, params));
 	}
 	
 	public static void proxyMethod(String classFullName, MethodParam... mps){
@@ -39,7 +40,7 @@ public class ProxyClass {
 			CtClass ct = pool.getCtClass(classFullName);// 加载这个类
 			
 			for(MethodParam mp:mps){
-				proxyMethod(ct, pool, mp.getMethodName(), mp.getParams(), mp.getBeforeBody(), mp.getAfterBody());
+				proxyMethod(ct, pool, mp);
 			}
 			
 			// 转为class
@@ -51,19 +52,19 @@ public class ProxyClass {
 		}
 	}
 	
-	private static void proxyMethod(CtClass ct, ClassPool pool, String methodName, @SuppressWarnings("rawtypes") Class[] params, String beforeBody, String afterBody) throws Exception{
+	protected static void proxyMethod(CtClass ct, ClassPool pool, MethodParam mp) throws Exception{
 		CtClass[] ctParams = null;
-		if(params != null && params.length > 0){
-			ctParams = new CtClass[params.length];
+		if(mp.getParams() != null && mp.getParams().length > 0){
+			ctParams = new CtClass[mp.getParams().length];
 		}
-		CtMethod m = getSignMethod(pool, methodName, params, ctParams, ct);
+		CtMethod m = getSignMethod(pool, mp.getMethodName(), mp.getParams(), ctParams, ct);
 		//无返回值直接前后加就行，放弃，兼容ProxyClassLog前后变量关联
 //		if(m.getReturnType().getName().equals("void")){
 //			m.insertBefore(beforeBody);
 //			m.insertAfter("String result = null;"+afterBody);
 //		}else{
-			createProxyMethod(m, methodName, ctParams, ct);
-			changeOriginalMethod(m, methodName, ctParams, ct, beforeBody, afterBody);
+			createProxyMethod(m, mp.getMethodName(), ctParams, ct);
+			changeOriginalMethod(m, ctParams, ct, mp);
 //		}
 	}
 	
@@ -89,7 +90,7 @@ public class ProxyClass {
 	 * @param ct
 	 * @throws Exception
 	 */
-	private static void createProxyMethod(CtMethod m, String methodName, CtClass[] ctParams, CtClass ct) throws Exception{
+	protected static void createProxyMethod(CtMethod m, String methodName, CtClass[] ctParams, CtClass ct) throws Exception{
 		CtMethod m2 = new CtMethod(m.getReturnType(), methodName+"Proxy___", ctParams, ct);
 		
 //		System.out.println(m.getReturnType().getName());
@@ -126,15 +127,7 @@ public class ProxyClass {
 	 * @param afterBody
 	 * @throws Exception
 	 */
-	private static void changeOriginalMethod(CtMethod m, String methodName, CtClass[] ctParams, CtClass ct, String beforeBody, String afterBody) throws Exception{
-		if(beforeBody == null){
-			beforeBody = "";
-		}
-		if(afterBody == null){
-			afterBody = "";
-		}
-		StringBuilder bodyInvoke = new StringBuilder();
-		
+	protected static void changeOriginalMethod(CtMethod m, CtClass[] ctParams, CtClass ct, MethodParam mp) throws Exception{
 		StringBuilder mStr = new StringBuilder("public ");
 		//按位与：m.getMethodInfo().getAccessFlags() & 0b1000
 		if((m.getMethodInfo().getAccessFlags() & AccessFlag.STATIC) == 8){
@@ -142,40 +135,15 @@ public class ProxyClass {
 		}
 		
 		mStr.append(m.getReturnType().getName()).append(" ");
-		mStr.append(methodName).append("(");
-		generateParamDeclareInvoke(ctParams, mStr, bodyInvoke);
-		mStr.append("){");
+		mStr.append(mp.getMethodName()).append("(");
 		
-		String returnTypeName = m.getReturnType().getName();
-		if(returnTypeName.equals("void")){
-			mStr.append("String result = null;");
-			mStr.append(beforeBody);
-			mStr.append(methodName).append("Proxy___(").append(bodyInvoke).append(");");
-			mStr.append(afterBody);
+		String funcStr = null;
+		if(mp.getCustomFullMethodName() == null){
+			funcStr = generateParamAndBodyString(mStr, m, mp.getMethodName(), ctParams, mp.getBeforeBody(), mp.getAfterBody());
 		}else{
-//			Integer.class.getField("TYPE").get(null)//int.class
-//			if(m.getReturnType() instanceof CtPrimitiveType){//还是要区分boolean，干脆直接判断
-			if(PrimitiveEnum.initPrimitive0.contains(returnTypeName)){
-				mStr.append(returnTypeName).append(" result = 0;");
-			}else if(PrimitiveEnum.initPrimitiveFalse.equals(returnTypeName)){
-				mStr.append(returnTypeName).append(" result = false;");
-			}else{
-				mStr.append(returnTypeName).append(" result = null;");
-			}
-			mStr.append(beforeBody);
-			mStr.append("result = ");
-			mStr.append(methodName).append("Proxy___(").append(bodyInvoke).append(");");
-			mStr.append(afterBody);
-			mStr.append("return result;");
+			funcStr = generateParamAndBodyMethod(mStr, m, mp.getMethodName(), ctParams, mp.getCustomFullMethodName());
 		}
-		mStr.append("}");
 		
-		String funcStr = mStr.toString();
-		if(PrimitiveEnum.checkPrimitive(returnTypeName)){
-			funcStr = funcStr.replaceAll("\\$\\{returnwrapper-(.*?)\\}", PrimitiveEnum.valueOf("_"+returnTypeName).getWrapper()+".valueOf($1)");
-		}else{
-			funcStr = funcStr.replaceAll("\\$\\{returnwrapper-(.*?)\\}", "$1");
-		}
 		//直接setBody不能对应形参名
 //		m3.setBody(methodBody.toString());
 //		System.out.println(funcStr);
@@ -189,13 +157,114 @@ public class ProxyClass {
 		ct.addMethod(m3);
 	}
 	
+	@Deprecated
+	protected static String generateParamAndBodyString(StringBuilder mStr, CtMethod m, String methodName, CtClass[] ctParams, String beforeBody, String afterBody) throws NotFoundException{
+		StringBuilder bodyInvoke = new StringBuilder();
+		generateParamDeclareInvoke(ctParams, mStr, bodyInvoke, false);
+		mStr.append("){");
+		
+		if(beforeBody == null){
+			beforeBody = "";
+		}
+		if(afterBody == null){
+			afterBody = "";
+		}
+		
+		String returnTypeName = m.getReturnType().getName();
+		mStr.append(beforeBody);
+		if(returnTypeName.equals("void")){
+			mStr.append("String result = null;");
+		}else{
+//			Integer.class.getField("TYPE").get(null)//int.class
+//			if(m.getReturnType() instanceof CtPrimitiveType){//还是要区分boolean，干脆直接判断
+			mStr.append(returnTypeName).append(" result = ");
+		}
+		mStr.append(methodName).append("Proxy___(").append(bodyInvoke).append(");");
+		mStr.append(afterBody);
+		if(!returnTypeName.equals("void")){
+			mStr.append("return result;");
+		}
+		mStr.append("}");
+		
+		String funcStr = mStr.toString();
+		if(PrimitiveEnum.checkPrimitive(returnTypeName)){
+			funcStr = funcStr.replaceAll("\\$\\{returnwrapper-(.*?)\\}", PrimitiveEnum.valueOf("_"+returnTypeName).getWrapper()+".valueOf($1)");
+		}else{
+			funcStr = funcStr.replaceAll("\\$\\{returnwrapper-(.*?)\\}", "$1");
+		}
+		return funcStr;
+	}
+
+	protected static String generateParamAndBodyMethod(StringBuilder mStr, CtMethod m, String methodName, CtClass[] ctParams, String customFullMethodName) throws NotFoundException{
+		StringBuilder bodyInvoke = new StringBuilder();
+		generateParamDeclareInvoke(ctParams, mStr, bodyInvoke, true);
+		mStr.append("){try {");
+		
+		String returnTypeName = m.getReturnType().getName();
+		if(!returnTypeName.equals("void")){
+			if(PrimitiveEnum.checkPrimitive(returnTypeName)){
+				mStr.append(returnTypeName).append(" result = ((").append(PrimitiveEnum.getEnum(returnTypeName).getWrapper()).append(")");
+			}else{
+				mStr.append(returnTypeName).append(" result = (").append(returnTypeName).append(")");
+			}
+		}
+		mStr.append(customFullMethodName).append("(new ").append(ProxyPoint.class.getCanonicalName()).append("(");
+		mStr.append(m.getDeclaringClass().getName()).append(".class");
+
+		if((m.getMethodInfo().getAccessFlags() & AccessFlag.STATIC) == 8){
+			mStr.append(", null");
+		}else{
+			mStr.append(", this");
+		}
+		mStr.append(", \"").append(methodName).append("\"");
+		compileBodyInvoke(mStr, ctParams, bodyInvoke);
+		mStr.append("))");
+		if(returnTypeName.equals("void")){
+			mStr.append(";");
+		}else{
+			if(PrimitiveEnum.checkPrimitive(returnTypeName)){
+				mStr.append(").").append(PrimitiveEnum.getEnum(returnTypeName).getToPrimitiveMethodName()).append("()");
+			}
+			mStr.append(";");
+			mStr.append("return result;");
+		}
+		mStr.append("} catch (Exception e) {throw new RuntimeException(e);}}");
+		
+		return mStr.toString();
+	}
+	
+	/**
+	 * 完善调用参数
+	 * @param mStr
+	 * @param ctParams
+	 * @param bodyInvoke
+	 */
+	protected static void compileBodyInvoke(StringBuilder mStr, CtClass[] ctParams, StringBuilder bodyInvoke){
+		if(bodyInvoke.length() > 0){
+			mStr.append(", new Class[]{");
+			int i = 0;
+			for(CtClass cls:ctParams){
+				if(i != 0){
+					mStr.append(", ");
+				}
+				mStr.append(cls.getName()).append(".class");
+				i++;
+			}
+			mStr.append("}");
+			
+			mStr.append(", new Object[]{").append(bodyInvoke).append("}");
+		}else{
+			mStr.append(", null, null");
+		}
+	}
+	
 	/**
 	 * 生成形参定义字符串 和 形参调用字符串
 	 * @param ctParams
 	 * @param declareStr
 	 * @param invokeStr
 	 */
-	private static void generateParamDeclareInvoke(CtClass[] ctParams, StringBuilder declareStr, StringBuilder invokeStr){
+	protected static void generateParamDeclareInvoke(CtClass[] ctParams, StringBuilder declareStr, StringBuilder invokeStr, boolean useWrapper){
 		if(ctParams != null && ctParams.length > 0){
 			for(int i=0,length=ctParams.length; i< length; i++){
 				if(i != 0){
@@ -203,12 +272,25 @@ public class ProxyClass {
 					invokeStr.append(",");
 				}
 				declareStr.append(ctParams[i].getName()).append(" arg").append(i);
-				invokeStr.append("arg").append(i);
+				if(useWrapper && PrimitiveEnum.checkPrimitive(ctParams[i].getName())){
+					invokeStr.append(PrimitiveEnum.getEnum(ctParams[i].getName()).getWrapper()).append(".valueOf(");
+					invokeStr.append("arg").append(i).append(")");
+				}else{
+					invokeStr.append("arg").append(i);
+				}
 			}
 		}
 	}
-
-
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public static void initClass(String pathName, String paramStart){
         try {
         	Properties prop = new Properties();
@@ -239,6 +321,7 @@ public class ProxyClass {
         try {
         	Map<String, List<MethodParam>> map = new HashMap<>();
         	
+        	Set<String> existsCheck = new HashSet<>();
         	Properties prop = new Properties();
         	InputStream is = ProxyClass.class.getClassLoader().getResourceAsStream(pathName);
         	if(is == null){
@@ -266,7 +349,18 @@ public class ProxyClass {
             		//方法参数指定
             		@SuppressWarnings("rawtypes")
 					List<Class> clses = new ArrayList<>();
-            		String[] params = values[2].replace("-", "").split(",");
+
+            		String[] params = null;
+            		String customeProxyMethod = null;
+            		if(values.length == 3){
+            			params = values[2].replace("-", "").split(",");
+            		}else{
+            			customeProxyMethod = values[2];
+            			String customeProxyClass = customeProxyMethod.substring(0, customeProxyMethod.lastIndexOf("."));
+            			addRelateClassPath(Class.forName(customeProxyClass));
+            			params = values[3].replace("-", "").split(",");
+            		}
+            		
             		for(String param:params){
             			if("".equals(param)){
             				continue;
@@ -277,7 +371,13 @@ public class ProxyClass {
             			}
             		}
             		//类关联方法
-            		methods.add(new MethodParam(values[1], clses.toArray(new Class[]{})));
+            		String existStr = values[0] + ":" + values[1] + clses.toString();
+            		if(existsCheck.contains(existStr)){
+            			throw new RuntimeException("同一个方法不能设置两次:" + existStr);
+            		}else{
+            			existsCheck.add(existStr);
+            		}
+            		methods.add(new MethodParam(values[1], customeProxyMethod, clses.toArray(new Class[]{})));
             	}
             }
             return map;

@@ -14,6 +14,7 @@ public class ProxyClassLog extends ProxyClass{
 		ProxyClass.addRelateClassPath(JSON.class);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static void proxyMethodLog(String classFullName, String methodName, @SuppressWarnings("rawtypes") Class[] params){
 		proxyMethod(classFullName, methodName, params, 
 				generateBeforeStr(classFullName, methodName, params), 
@@ -23,8 +24,10 @@ public class ProxyClassLog extends ProxyClass{
 	public static void proxyMethodLog(Map<String, List<MethodParam>> map){
 		for(String key:map.keySet()){
 			for(MethodParam mp:map.get(key)){
-				mp.setBeforeBody(generateBeforeStr(key, mp.getMethodName(), mp.getParams()));
-				mp.setAfterBody(generateAfterStr(key, mp.getMethodName(), mp.getParams()));
+				if(mp.getCustomFullMethodName() == null){
+					mp.setBeforeBody(generateBeforeStr(key, mp.getMethodName(), mp.getParams()));
+					mp.setAfterBody(generateAfterStr(key, mp.getMethodName(), mp.getParams()));
+				}
 			}
 			proxyMethod(key, map.get(key).toArray(new MethodParam[]{}));
 		}

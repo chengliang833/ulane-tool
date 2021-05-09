@@ -2,6 +2,7 @@ package wang.ulane.log;
 
 import java.lang.reflect.Method;
 
+import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
@@ -19,59 +20,84 @@ public class LogAspect {
 	private static Integer returnLength = 1000;
 	private static Integer paramsLength = 1000;
 	
-	@Value("${log.return.length:1000}")
+	@Value("${logext.return.length:1000}")
 	public void setReturnLength(Integer returnLength) {
 		LogAspect.returnLength = returnLength;
 	}
-	@Value("${log.params.length:1000}")
+	@Value("${logext.params.length:1000}")
 	public void setParamsLength(Integer paramsLength) {
 		LogAspect.paramsLength = paramsLength;
 	}
 
 	public Object controllerAroundInvoke(ProceedingJoinPoint joinPoint) throws Throwable{
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        Method method = signature.getMethod();
-        Class<?> targetClass = method.getDeclaringClass();
-
-        Object[] args = joinPoint.getArgs();
+        long start = System.currentTimeMillis();
         
-        String target = targetClass.getName() + ":" + method.getName();
-        String params = JSONObject.toJSONString(args);
-
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        String target = logBefore(signature.getMethod(), joinPoint.getArgs());
+        
 //        HttpServletRequest request =  ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 //        log.info("sessionid:"+request.getSession().getId());
         
-        printLogBeforeProceed(target, params);
-
-        long start = System.currentTimeMillis();
 		Object result = joinPoint.proceed();
+		
+		logAfter(start, result, target);
+		
+        return result;
+	}
+	public Object controllerAroundInvoke(MethodInvocation invocation) throws Throwable{
+        long start = System.currentTimeMillis();
+        
+        String target = logBefore(invocation.getMethod(), invocation.getArguments());
+        
+		Object result = invocation.proceed();
+		
+		logAfter(start, result, target);
+		
+        return result;
+	}
+	
+    public Object serviceAroundInvoke(ProceedingJoinPoint joinPoint) throws Throwable {
+		long start = System.currentTimeMillis();
+		
+		MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+		String target = logBefore(signature.getMethod(), joinPoint.getArgs());
+		
+		Object result = joinPoint.proceed();
+		
+		printObjectLogAfterProceed(target, System.currentTimeMillis() - start, result);
+		
+		return result;
+    }
+    public Object serviceAroundInvoke(MethodInvocation invocation) throws Throwable {
+		long start = System.currentTimeMillis();
+		
+	    String target = logBefore(invocation.getMethod(), invocation.getArguments());
+		
+		Object result = invocation.proceed();
+		
+		printObjectLogAfterProceed(target, System.currentTimeMillis() - start, result);
+		
+		return result;
+    }
+    public String logBefore(Method method, Object[] args){
+	    Class<?> targetClass = method.getDeclaringClass();
+	    String target = targetClass.getName() + ":" + method.getName();
+		printLogBeforeProceed(target, JSONObject.toJSONString(args));
+    	return target;
+    }
+    public void logAfter(long start, Object result, String target){
         long timeConsuming = System.currentTimeMillis() - start;
-
         if(result instanceof ModelAndView || (result instanceof ResponseEntity && ((ResponseEntity)result).getBody() instanceof InputStreamResource)){
         	printStreamLogAfterProceed(target, timeConsuming, result);
         }else{
         	printObjectLogAfterProceed(target, timeConsuming, result);
         }
-        return result;
-	}
-	
-    public Object serviceAroundInvoke(ProceedingJoinPoint joinPoint) throws Throwable {
-		MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-	    Method method = signature.getMethod();
-	    Class<?> targetClass = method.getDeclaringClass();
-	    String target = targetClass.getName() + ":" + method.getName();
-		Object[] args = joinPoint.getArgs();
-		
-		long start = System.currentTimeMillis();
-		
-		printLogBeforeProceed(target, JSONObject.toJSONString(args));
-		
-		Object result = joinPoint.proceed();
-		long timeConsuming = System.currentTimeMillis() - start;
-		printObjectLogAfterProceed(target, timeConsuming, result);
-		
-		return result;
     }
+    
+    
+    
+    
+    
     
     public static void printLogBeforeProceed(String target, String params){
     	if(params.length() > paramsLength){
