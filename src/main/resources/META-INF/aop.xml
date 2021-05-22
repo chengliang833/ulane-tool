@@ -1,0 +1,11 @@
+<!DOCTYPE aspectj PUBLIC "-//AspectJ//DTD//EN" "http://www.eclipse.org/aspectj/dtd/aspectj.dtd">
+<!-- 文件头可不加 -->
+<aspectj>
+    <aspects>
+        <aspect name="wang.ulane.aspectj.weaver.ProfilingAspect"/>
+        <!--下面这个似乎不需要 重复切入了-->
+<!--        <weaver options="-verbose -showWeaveInfo">
+            <include within="wang.ulane.aspectj.weaver.bean..*"/>
+        </weaver>-->
+    </aspects>
+</aspectj>

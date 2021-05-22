@@ -1,21 +1,36 @@
 package wang.ulane;
 
+import java.io.FileInputStream;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 import org.openjdk.jol.vm.VM;
 
 import com.alibaba.fastjson.JSONArray;
 
 import lombok.extern.slf4j.Slf4j;
+import wang.ulane.file.ConvertUtil;
 
 @Slf4j
 public class TestUtil {
 	static AtomicInteger index = new AtomicInteger(0);
 	static volatile int id = 0;
 	public static void main(String[] args) throws Exception {
+		
+		System.out.println(ConvertUtil.parseString(new FileInputStream("C:\\Users\\Administrator\\Desktop\\temp.txt")));
+		
+//		System.out.println(Class.forName("").getField("TYPE").get(null));
+		
+//		String a = JSONObject.toJSONString(null);
+//		System.out.println(a.length());
+//		System.out.println(a == null);
+//		System.out.println(a.substring(2));
 		
 //		BigDecimal bd = new BigDecimal("");
 //		System.out.println(bd.toString());
@@ -24,7 +39,10 @@ public class TestUtil {
 		
 //		System.out.println("CPZR_QY_030_SH_ICR02030324".replaceAll("((_\\d+)+|(\\d+)+)$", ""));
 //		System.out.println("32.000".replaceAll("(\\.[0-9]*?)0*$", "$1").replaceAll("\\.$", ""));
-		System.out.println("eaw身s份d感染水f电f费f".replaceAll("[^\\u4e00-\\u9fa5]+", ""));
+//		System.out.println("eaw身s份d感染水f电f费f".replaceAll("[^\\u4e00-\\u9fa5]+", ""));
+//		System.out.println("12333.1".matches("\\d+|(\\d+\\.\\d+)"));
+
+//		System.out.println(2|0b11);
 		
 //		List<String> a = new ArrayList<>();
 //		a.add("asd");
@@ -34,43 +52,6 @@ public class TestUtil {
 		
 //		System.out.println("sfsd//dsf sd//s f".replaceAll("//.*", ""));
 //		System.out.println("sfsd\n\r\nsdfdf ".replaceAll("[\r\n]*", ""));
-		
-//		int threadCount = 10;
-//		//i++线程
-//		ExecutorService tpe = Executors.newFixedThreadPool(threadCount);
-//		CyclicBarrier cb = new CyclicBarrier(threadCount);
-//		final TestAbc a = new TestAbc();
-//		for(int i=0; i<threadCount; i++){
-//			tpe.execute(new Runnable() {
-//				public void run() {
-//					for(int j=0; j<10000; j++){
-////						id = id + 1;
-//						id++;
-////						index.getAndIncrement();
-////						index.getAndAdd(2);
-////						a.getAi().getAndIncrement();
-////						a.addA();
-////						a.addAReen();
-//					}
-//					try {
-//						cb.await();
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//					}
-//				}
-//			});
-//		}
-//		System.out.println(id);
-////		System.out.println(a.getAi());
-////		System.out.println(a.getA());
-////		System.out.println(index);
-//		tpe.shutdown();
-//		Thread.sleep(2000);//防止打印程序预先拿到值
-//		System.out.println(id);
-////		System.out.println(a.getAi());
-////		System.out.println(a.getA());
-////		System.out.println(index);
-//		System.out.println("finish...");
 		
 		//引用值传递
 //		int a = 127;

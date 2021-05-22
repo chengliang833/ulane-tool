@@ -1,4 +1,4 @@
-package wang.ulane;
+package wang.ulane.util;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -13,11 +15,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.alibaba.fastjson.serializer.ValueFilter;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 public class DataUtil {
 	
+	protected static Logger log = LoggerFactory.getLogger(DataUtil.class);
+
 	/**
 	 * 数字转换为千分位
 	 * @param num

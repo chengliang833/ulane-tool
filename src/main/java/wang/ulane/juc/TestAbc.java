@@ -1,4 +1,4 @@
-package wang.ulane;
+package wang.ulane.juc;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;

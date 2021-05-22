@@ -228,7 +228,7 @@ public class ProxyClass {
 			mStr.append(";");
 			mStr.append("return result;");
 		}
-		mStr.append("} catch (Exception e) {throw new RuntimeException(e);}}");
+		mStr.append("} catch (RuntimeException e) {throw e;} catch (Exception e) {throw new RuntimeException(e);}}");
 		
 		return mStr.toString();
 	}
@@ -290,7 +290,14 @@ public class ProxyClass {
 	
 	
 	
-	
+	/**
+	 * 初始化二次编译需要的class，properties中指定，同一个jar包只需要指定任意一个class即可
+	 * 1.需要代理的class如果在jar包中；但是需要用同一个jar包中的另一个class，否则会load两次
+	 * 2.methodBody中需要的class，直接指定
+	 * 3.代理当前项目中的class，也需要指定当前项目中其他任意一个class作为牵引
+	 * @param pathName
+	 * @param paramStart
+	 */
 	public static void initClass(String pathName, String paramStart){
         try {
         	Properties prop = new Properties();
@@ -328,6 +335,9 @@ public class ProxyClass {
         		return map;
         	}
             prop.load(is);
+            if("false".equals(prop.getProperty("logext.proxys.flag"))){
+            	return map;
+            }
             Set<Object> propSet = prop.keySet();
             for(Object keyObj:propSet){
             	String key = (String) keyObj;

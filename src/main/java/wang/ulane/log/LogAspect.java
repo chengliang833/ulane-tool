@@ -19,6 +19,7 @@ public class LogAspect {
 	
 	private static Integer returnLength = 1000;
 	private static Integer paramsLength = 1000;
+	private static Integer mybatisParamsLength = 1000;
 	
 	@Value("${logext.return.length:1000}")
 	public void setReturnLength(Integer returnLength) {
@@ -29,34 +30,21 @@ public class LogAspect {
 		LogAspect.paramsLength = paramsLength;
 	}
 
-	public Object controllerAroundInvoke(ProceedingJoinPoint joinPoint) throws Throwable{
-        long start = System.currentTimeMillis();
-        
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        String target = logBefore(signature.getMethod(), joinPoint.getArgs());
-        
-//        HttpServletRequest request =  ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-//        log.info("sessionid:"+request.getSession().getId());
-        
-		Object result = joinPoint.proceed();
-		
-		logAfter(start, result, target);
-		
-        return result;
+	@Value("${logext.mybatis.params.length:1000}")
+	public static void setMybatisParamsLength(Integer mybatisParamsLength) {
+		LogAspect.mybatisParamsLength = mybatisParamsLength;
 	}
-	public Object controllerAroundInvoke(MethodInvocation invocation) throws Throwable{
-        long start = System.currentTimeMillis();
-        
-        String target = logBefore(invocation.getMethod(), invocation.getArguments());
-        
-		Object result = invocation.proceed();
-		
-		logAfter(start, result, target);
-		
-        return result;
+	public static Integer getMybatisParamsLength() {
+		return mybatisParamsLength;
 	}
 	
+	public Object controllerAroundInvoke(ProceedingJoinPoint joinPoint) throws Throwable{
+        return aroundInvoke(joinPoint, true);
+	}
     public Object serviceAroundInvoke(ProceedingJoinPoint joinPoint) throws Throwable {
+		return aroundInvoke(joinPoint, false);
+    }
+    public Object aroundInvoke(ProceedingJoinPoint joinPoint, boolean maybeStream) throws Throwable {
 		long start = System.currentTimeMillis();
 		
 		MethodSignature signature = (MethodSignature) joinPoint.getSignature();
@@ -64,30 +52,39 @@ public class LogAspect {
 		
 		Object result = joinPoint.proceed();
 		
-		printObjectLogAfterProceed(target, System.currentTimeMillis() - start, result);
+		logAfter(maybeStream, start, result, target);
 		
 		return result;
     }
+    
+	public Object controllerAroundInvoke(MethodInvocation invocation) throws Throwable{
+        return aroundInvoke(invocation, true);
+	}
     public Object serviceAroundInvoke(MethodInvocation invocation) throws Throwable {
+		return aroundInvoke(invocation, false);
+    }
+    public Object aroundInvoke(MethodInvocation invocation, boolean maybeStream) throws Throwable {
 		long start = System.currentTimeMillis();
 		
 	    String target = logBefore(invocation.getMethod(), invocation.getArguments());
 		
 		Object result = invocation.proceed();
 		
-		printObjectLogAfterProceed(target, System.currentTimeMillis() - start, result);
+		logAfter(maybeStream, start, result, target);
 		
 		return result;
     }
+    
+    
     public String logBefore(Method method, Object[] args){
 	    Class<?> targetClass = method.getDeclaringClass();
 	    String target = targetClass.getName() + ":" + method.getName();
 		printLogBeforeProceed(target, JSONObject.toJSONString(args));
     	return target;
     }
-    public void logAfter(long start, Object result, String target){
+    public void logAfter(boolean maybeStream, long start, Object result, String target){
         long timeConsuming = System.currentTimeMillis() - start;
-        if(result instanceof ModelAndView || (result instanceof ResponseEntity && ((ResponseEntity)result).getBody() instanceof InputStreamResource)){
+        if(maybeStream && (result instanceof ModelAndView || (result instanceof ResponseEntity && ((ResponseEntity)result).getBody() instanceof InputStreamResource))){
         	printStreamLogAfterProceed(target, timeConsuming, result);
         }else{
         	printObjectLogAfterProceed(target, timeConsuming, result);
@@ -103,11 +100,11 @@ public class LogAspect {
     	if(params.length() > paramsLength){
     		params = params.substring(0,paramsLength)+"......";
     	}
-    	log.info("开始{}调用--> {} 参数:{}", Thread.currentThread().getName(), target, params);
+    	log.info("{}开始调用--> {} 参数:{}", Thread.currentThread().getName(), target, params);
     }
     
     public static void printStreamLogAfterProceed(String target, long timeConsuming, Object result){
-    	log.info("结束{}调用<-- {} 返回值:{} 耗时:{}ms", Thread.currentThread().getName(), target, "InputStreamResource 不打印", timeConsuming);
+    	log.info("{}结束调用<-- {} 返回值:{} 耗时:{}ms", Thread.currentThread().getName(), target, "InputStreamResource 不打印", timeConsuming);
     }
     
     public static void printObjectLogAfterProceed(String target, long timeConsuming, Object result){
@@ -116,8 +113,7 @@ public class LogAspect {
     	if(resultStr.length() > returnLength){
     		resultStr = resultStr.substring(0,returnLength)+"......";
     	}
-//    	log.info("结束{}调用<-- {} 返回值:{} 耗时:{}ms", Thread.currentThread().getName(), target, JSONObject.toJSONString(result), timeConsuming);
-    	log.info("结束{}调用<-- {} 返回值:{} 耗时:{}ms", Thread.currentThread().getName(), target, resultStr, timeConsuming);
+    	log.info("{}结束调用<-- {} 返回值:{} 耗时:{}ms", Thread.currentThread().getName(), target, resultStr, timeConsuming);
     }
     
 }

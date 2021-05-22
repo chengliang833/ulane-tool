@@ -31,6 +31,9 @@ public class CustomLogImpl implements Log {
   public void debug(String s) {
 //	  System.out.println("debug here："+s);
 	//改为info打印（陈年老代码debug配置不了哇）
+  	if(s.length() > LogAspect.getMybatisParamsLength()){
+		s = s.substring(0, LogAspect.getMybatisParamsLength())+"......";
+	}
     log.info("{}:{}", log.getName(), s);
   }
 

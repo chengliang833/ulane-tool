@@ -27,9 +27,11 @@ public class BeanTest {
 		return 1;
 	}
 
-	public void test(Integer i, Integer b) {
-		System.out.println(i);
-		System.out.println(b);
+	public int id = 0;
+	public synchronized void test(Integer i, Integer b) {
+		id++;
+//		System.out.println(i);
+//		System.out.println(b);
 	}
 
 	public int test(Integer i, Integer b, Integer c) {
