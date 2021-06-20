@@ -9,10 +9,10 @@ public class Application {
 		testLoadTime();
 	}
 	public static void testLoadTime() {
-		Account account = new Account();
+//		Account account = new Account();
 		System.out.println("==================");
-		account.pay(10);
-		account.pay(50);
+		Account.pay(10);
+//		Account.pay(50);
 		System.out.println("==================");
 	}
 }

@@ -1,5 +1,8 @@
 package wang.ulane.proxy;
 
+import java.lang.reflect.Method;
+import java.util.Arrays;
+
 public class ProxyPoint {
 	
 	private Class cls;
@@ -23,7 +26,19 @@ public class ProxyPoint {
 
 	@SuppressWarnings("unchecked")
 	public Object proceed() throws Exception {
-		return cls.getMethod(methodName+"Proxy___", paramClses).invoke(bean, args);
+		Method m = cls.getDeclaredMethod(methodName+"Proxy___", paramClses);
+		if(!m.isAccessible()){
+			m.setAccessible(true);
+		}
+		return m.invoke(bean, args);
+//		if(m.isAccessible()){
+//			return m.invoke(bean, args);
+//		}else{
+//			m.setAccessible(true);
+//			Object result = m.invoke(bean, args);
+//			m.setAccessible(false);
+//			return result;
+//		}
 	}
 
 	public Class getCls() {

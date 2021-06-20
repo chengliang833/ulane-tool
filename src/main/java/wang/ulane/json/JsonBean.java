@@ -1,5 +1,7 @@
-package wang.ulane.fastjson;
+package wang.ulane.json;
 
+@StdNameAnnotation
+@FieldBaseAnnotation
 public class JsonBean {
 	private String SDFD;
 	

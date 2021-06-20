@@ -2,6 +2,9 @@ package wang.ulane.log;
 
 import java.lang.reflect.Method;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+
 import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -12,6 +15,8 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 public class LogAspect {
@@ -31,24 +36,24 @@ public class LogAspect {
 	}
 
 	@Value("${logext.mybatis.params.length:1000}")
-	public static void setMybatisParamsLength(Integer mybatisParamsLength) {
+	public void setMybatisParamsLength(Integer mybatisParamsLength) {
 		LogAspect.mybatisParamsLength = mybatisParamsLength;
 	}
 	public static Integer getMybatisParamsLength() {
 		return mybatisParamsLength;
 	}
 	
-	public Object controllerAroundInvoke(ProceedingJoinPoint joinPoint) throws Throwable{
+	public static Object controllerAroundInvoke(ProceedingJoinPoint joinPoint) throws Throwable{
         return aroundInvoke(joinPoint, true);
 	}
-    public Object serviceAroundInvoke(ProceedingJoinPoint joinPoint) throws Throwable {
+    public static Object serviceAroundInvoke(ProceedingJoinPoint joinPoint) throws Throwable {
 		return aroundInvoke(joinPoint, false);
     }
-    public Object aroundInvoke(ProceedingJoinPoint joinPoint, boolean maybeStream) throws Throwable {
+    public static Object aroundInvoke(ProceedingJoinPoint joinPoint, boolean maybeStream) throws Throwable {
 		long start = System.currentTimeMillis();
 		
 		MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-		String target = logBefore(signature.getMethod(), joinPoint.getArgs());
+		String target = logBefore(maybeStream, signature.getMethod(), joinPoint.getArgs());
 		
 		Object result = joinPoint.proceed();
 		
@@ -57,16 +62,16 @@ public class LogAspect {
 		return result;
     }
     
-	public Object controllerAroundInvoke(MethodInvocation invocation) throws Throwable{
+	public static Object controllerAroundInvoke(MethodInvocation invocation) throws Throwable{
         return aroundInvoke(invocation, true);
 	}
-    public Object serviceAroundInvoke(MethodInvocation invocation) throws Throwable {
+    public static Object serviceAroundInvoke(MethodInvocation invocation) throws Throwable {
 		return aroundInvoke(invocation, false);
     }
-    public Object aroundInvoke(MethodInvocation invocation, boolean maybeStream) throws Throwable {
+    public static Object aroundInvoke(MethodInvocation invocation, boolean maybeStream) throws Throwable {
 		long start = System.currentTimeMillis();
 		
-	    String target = logBefore(invocation.getMethod(), invocation.getArguments());
+	    String target = logBefore(maybeStream, invocation.getMethod(), invocation.getArguments());
 		
 		Object result = invocation.proceed();
 		
@@ -76,13 +81,25 @@ public class LogAspect {
     }
     
     
-    public String logBefore(Method method, Object[] args){
+    public static String logBefore(boolean maybeStream, Method method, Object[] args){
 	    Class<?> targetClass = method.getDeclaringClass();
 	    String target = targetClass.getName() + ":" + method.getName();
-		printLogBeforeProceed(target, JSONObject.toJSONString(args));
+	    if(maybeStream){
+	    	JSONArray arr = new JSONArray(); 
+	    	for(Object arg:args){
+	    		if(arg instanceof ServletRequest || arg instanceof ServletResponse){
+	    			arr.add("servlet object...");
+	    		}else{
+	    			arr.add(arg);
+	    		}
+	    	}
+	    	printLogBeforeProceed(target, arr.toJSONString());
+	    }else{
+	    	printLogBeforeProceed(target, JSON.toJSONString(args));
+	    }
     	return target;
     }
-    public void logAfter(boolean maybeStream, long start, Object result, String target){
+    public static void logAfter(boolean maybeStream, long start, Object result, String target){
         long timeConsuming = System.currentTimeMillis() - start;
         if(maybeStream && (result instanceof ModelAndView || (result instanceof ResponseEntity && ((ResponseEntity)result).getBody() instanceof InputStreamResource))){
         	printStreamLogAfterProceed(target, timeConsuming, result);

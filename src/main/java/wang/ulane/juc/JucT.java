@@ -5,7 +5,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class JucTest {
+public class JucT {
 	
 	public static int id = 0;
 	public static AtomicInteger index = new AtomicInteger(0);
@@ -15,7 +15,7 @@ public class JucTest {
 		ExecutorService es = Executors.newFixedThreadPool(5);
 		CountDownLatch cdl = new CountDownLatch(taskCount);
 //		CyclicBarrier cb = new CyclicBarrier(threadCount); //这个只阻塞子线程，不阻塞主线程
-		final TestAbc a = new TestAbc();
+		final EntityT a = new EntityT();
 		for(int i=0; i<taskCount; i++){
 			es.execute(new Runnable() {
 				public void run() {

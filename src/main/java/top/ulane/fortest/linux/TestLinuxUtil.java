@@ -1,4 +1,4 @@
-package top.ulane.linux;
+package top.ulane.fortest.linux;
 
 public class TestLinuxUtil {
 	public static void main(String[] args) {

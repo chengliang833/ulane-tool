@@ -1,0 +1,21 @@
+	@PreDestroy
+	public void destroyRunning(){
+		//先释放dubbo所占用的资源
+		ProtocolConfig.destroyAll();
+		//用反射释放NettyClient所占用的资源, 以避免不能优雅shutdown的问题
+		releaseNettyClientExternalResources();
+	}
+	
+	private void releaseNettyClientExternalResources() {
+		try {
+			Field field = NettyClient.class.getDeclaredField("channelFactory");
+			field.setAccessible(true);
+			ChannelFactory channelFactory = (ChannelFactory) field.get(NettyClient.class);
+			channelFactory.releaseExternalResources();
+			field.setAccessible(false);
+			logger.info("Release NettyClient's external resources");
+		} catch (Exception e){
+			logger.error("Release NettyClient's external resources error", e);
+		}
+	}
+	

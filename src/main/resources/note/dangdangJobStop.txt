@@ -1,0 +1,7 @@
+
+	@Autowired
+	private List<SpringJobScheduler> springJobSchedulers;
+
+	for(SpringJobScheduler springJobScheduler:springJobSchedulers) {
+		springJobScheduler.getSchedulerFacade().shutdownInstance();
+	}

@@ -22,8 +22,9 @@ public class TestUtil {
 	static AtomicInteger index = new AtomicInteger(0);
 	static volatile int id = 0;
 	public static void main(String[] args) throws Exception {
+		System.out.println(tableSizeFor(4));
 		
-		System.out.println(ConvertUtil.parseString(new FileInputStream("C:\\Users\\Administrator\\Desktop\\temp.txt")));
+//		System.out.println(ConvertUtil.parseString(new FileInputStream("C:\\Users\\Administrator\\Desktop\\temp.txt")));
 		
 //		System.out.println(Class.forName("").getField("TYPE").get(null));
 		
@@ -145,6 +146,18 @@ public class TestUtil {
 		
 //		System.out.println("随访>地方".replace(">", ""));
 	}
+
+    static final int MAXIMUM_CAPACITY = 1 << 30;
+    
+    static final int tableSizeFor(int cap) {
+        int n = cap - 1;
+        n |= n >>> 1;
+        n |= n >>> 2;
+        n |= n >>> 4;
+        n |= n >>> 8;
+        n |= n >>> 16;
+        return (n < 0) ? 1 : (n >= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : n + 1;
+    }
 	
 	public static void showMem(Object obj){
 		System.out.println(obj);
