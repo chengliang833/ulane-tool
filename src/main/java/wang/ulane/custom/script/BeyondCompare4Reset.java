@@ -10,7 +10,7 @@ import wang.ulane.file.FileManage;
 
 public class BeyondCompare4Reset {
 	
-	private static List<String> noDeletes = Arrays.asList("Helpers");
+	private static List<String> noDeletes = Arrays.asList("Helpers","BCFileFormats.xml");
 	
 	public static void execute(String folderPath) throws Exception{
 //		if(folderPath == null){

@@ -20,6 +20,13 @@ public class ThreadLocalT {
 	private static ThreadLocal<Map<Integer, Integer>> tlm = ThreadLocal.withInitial(()->new HashMap<>());
 	private static ThreadLocal<SimpleDateFormat> tlsdf = ThreadLocal.withInitial(()->new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	//1.7版本中初始化ThreadLocal
+	private static ThreadLocal<SimpleDateFormat> tlsdf7 = new ThreadLocal<SimpleDateFormat>(){
+		@Override
+		protected SimpleDateFormat initialValue(){
+			return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		}
+	}; 
 	
 	public static void main(String[] args) throws InterruptedException, ExecutionException {
 		ThreadPoolExecutor tpe = new ThreadPoolExecutor(10, 10, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());

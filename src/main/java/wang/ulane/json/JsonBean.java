@@ -6,6 +6,8 @@ public class JsonBean {
 	private String SDFD;
 	
 	private String SEF;
+	
+	private String sdfd;
 
 	public String getSDFD() {
 		return SDFD;
@@ -22,6 +24,13 @@ public class JsonBean {
 	public void setSEF(String sEF) {
 		SEF = sEF;
 	}
-	
+
+	public String getSdfd() {
+		return sdfd;
+	}
+
+	public void setSdfd(String sdfd) {
+		this.sdfd = sdfd;
+	}
 	
 }

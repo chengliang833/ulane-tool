@@ -1,5 +1,8 @@
 package wang.ulane.json;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.PascalNameFilter;
@@ -22,6 +25,7 @@ public class JsonTest {
 		obj.put("sdfd", "asd");
 		obj.put("sef", "gdsfg");
 		JsonBean b = JSON.parseObject(obj.toJSONString(), JsonBean.class);
+		b.setSdfd("sdfds");
 		System.out.println(obj.toJSONString());
 		System.out.println(JSON.toJSONString(b));
 		//字段首字母大写
@@ -30,6 +34,12 @@ public class JsonTest {
 		System.out.println(JSON.toJSONString(b, new SerializeConfig(true)));
 		
 		System.out.println(om.writeValueAsString(b));
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("obj", JSON.parseObject(JSON.toJSONString(b, new PascalNameFilter())));
+		map.put("obj2", b);
+		System.out.println(JSON.toJSONString(map));
+		
 		
 	}
 }
