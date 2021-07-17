@@ -24,6 +24,7 @@ public class ThreadLocalT {
 	private static ThreadLocal<SimpleDateFormat> tlsdf7 = new ThreadLocal<SimpleDateFormat>(){
 		@Override
 		protected SimpleDateFormat initialValue(){
+//			return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 			return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		}
 	}; 

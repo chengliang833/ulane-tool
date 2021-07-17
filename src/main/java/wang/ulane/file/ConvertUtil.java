@@ -63,14 +63,17 @@ public class ConvertUtil {
 	}
 	
 	public static byte[] streamToByte(InputStream input) throws IOException {
-//		byte[] data = null;
-//		try (ByteArrayOutputStream baos = parse(input)) {
-//			data = baos.toByteArray();
-//		}
+		int inputLen = input.available();
+		if(inputLen == 0){
+			byte[] data = null;
+			try (ByteArrayOutputStream baos = parse(input)) {
+				data = baos.toByteArray();
+			}
+			return data;
+		}
 		
 		int len = 0;
 		int allLen = 0;
-		int inputLen = input.available();
 		int stepLen = inputLen;
 		if(stepLen > 10240){
 			stepLen = 10240;
@@ -84,7 +87,6 @@ public class ConvertUtil {
 			}
 			allLen += len;
 		}
-		
 		return buf;
 	}
 	
