@@ -63,31 +63,32 @@ public class ConvertUtil {
 	}
 	
 	public static byte[] streamToByte(InputStream input) throws IOException {
-		int inputLen = input.available();
-		if(inputLen == 0){
+		//available()好像是一行的len，用不得
+//		int inputLen = input.available();
+//		if(inputLen == 0){
 			byte[] data = null;
 			try (ByteArrayOutputStream baos = parse(input)) {
 				data = baos.toByteArray();
 			}
 			return data;
-		}
-		
-		int len = 0;
-		int allLen = 0;
-		int stepLen = inputLen;
-		if(stepLen > 10240){
-			stepLen = 10240;
-		}
-		
-		byte[] buf = new byte[inputLen];
-		while (allLen < inputLen) {
-			len = input.read(buf, allLen, stepLen);
-			if(len == -1){
-				break;
-			}
-			allLen += len;
-		}
-		return buf;
+//		}
+//		
+//		int len = 0;
+//		int allLen = 0;
+//		int stepLen = inputLen;
+//		if(stepLen > 10240){
+//			stepLen = 10240;
+//		}
+//		
+//		byte[] buf = new byte[inputLen];
+//		while (allLen < inputLen) {
+//			len = input.read(buf, allLen, stepLen);
+//			if(len == -1){
+//				break;
+//			}
+//			allLen += len;
+//		}
+//		return buf;
 	}
 	
 	public static byte[] streamToByte(ByteArrayOutputStream output) {
