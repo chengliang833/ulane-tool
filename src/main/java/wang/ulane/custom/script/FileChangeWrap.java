@@ -11,7 +11,7 @@ import wang.ulane.file.FileManage;
 
 public class FileChangeWrap {
 	
-	private static List<String> fileTypes = Arrays.asList("txt","ntp","scss","sass","data","vue","yml","json","css","md","java","xml","js","html","properties");
+	private static List<String> fileTypes = Arrays.asList("txt","ntp","scss","sass","data","vue","yml","json","css","md","java","xml","js","html","properties","svg");
 	
 	private String changeType;
 	private String fromPath;
@@ -45,7 +45,7 @@ public class FileChangeWrap {
     }
     
     public void changeWrap(File file) throws Exception{
-    	if(!fileTypes.contains(file.getName().substring(file.getName().lastIndexOf(".")+1))){
+    	if(!file.getPath().equals(fromPath) && !fileTypes.contains(file.getName().substring(file.getName().lastIndexOf(".")+1))){
     		return;
     	}
     	
