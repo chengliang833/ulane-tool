@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.PascalNameFilter;
 import com.alibaba.fastjson.serializer.SerializeConfig;
@@ -20,7 +21,21 @@ public class JsonTest {
 		om.enable(MapperFeature.USE_STD_BEAN_NAMING);
 	}
 	
-	public static void main(String[] args) throws JsonProcessingException {
+	public static void main(String[] args) {
+		upperFilterTest(args);
+	}
+	
+	public static void upperFilterTest(String[] args){
+		String str = "[{\"model\":\"RYPOSFR\",\"siz\":\"1\",\"totalcount\":\"1\",\"TDATA\":{\"RYPOSFRLIST\":[{\"creditcode\":\"2143243253254\",\"entname\":\"地方担任各\"}]}},{\"model\":\"RYPOSFR\",\"siz\":\"1\",\"totalcount\":\"1\",\"TDATA\":{\"RYPOSFRLIST\":[{\"creditcode\":\"2143243253254\",\"entname\":\"地方担任各\"}]}},{\"model\":\"RYPOSFR\",\"siz\":\"1\",\"totalcount\":\"1\",\"TDATA\":{\"RYPOSFRLIST\":[{\"creditcode\":\"2143243253254\",\"entname\":\"地方担任各\"}]}},{\"model\":\"RYPOSFR\",\"siz\":\"1\",\"totalcount\":\"1\",\"TDATA\":{\"RYPOSFRLIST\":[{\"creditcode\":\"2143243253254\",\"entname\":\"地方担任各\"}]}},{\"model\":\"RYPOSFR\",\"siz\":\"1\",\"totalcount\":\"1\",\"TDATA\":{\"RYPOSFRLIST\":[{\"creditcode\":\"2143243253254\",\"entname\":\"地方担任各\"}]}}]";
+		System.out.println(JSON.toJSONString(JSON.parse(str), new JSONUpperNameFilter()));
+		
+		JSONArray arr = JSON.parseArray(str);
+		System.out.println(arr.getJSONObject(0).get("model"));
+		arr = JSON.parseArray(JSON.toJSONString(arr, new JSONUpperNameFilter()));
+		System.out.println(arr.getJSONObject(0).get("model"));
+	}
+	
+	public static void main1(String[] args) throws JsonProcessingException {
 		JSONObject obj = new JSONObject();
 		obj.put("sdfd", "asd");
 		obj.put("sef", "gdsfg");
