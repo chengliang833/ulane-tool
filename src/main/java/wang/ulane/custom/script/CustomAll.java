@@ -39,6 +39,9 @@ public class CustomAll {
 			case "file_changewrap_n":
 				new FileChangeWrap("n", param1, param2).execute();
 				break;
+			case "file_changewrap_n_any":
+				new FileChangeWrap("n", param1, param2, true).execute();
+				break;
 			case "file_changewrap_rn":
 				new FileChangeWrap("rn", param1, param2).execute();
 				break;

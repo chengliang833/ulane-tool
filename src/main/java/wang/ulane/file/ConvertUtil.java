@@ -32,13 +32,22 @@ public class ConvertUtil {
 	}
 
 	public static ByteArrayOutputStream parseWithStrWrap(String fromStr, String toStr, InputStream input) throws IOException {
+		return parseWithStrWrap(new String[]{fromStr}, toStr, input);
+	}
+	public static ByteArrayOutputStream parseWithStrWrap(String[] fromStrs, String toStr, InputStream input) throws IOException {
 		String str = parseString(input);
-		
-		if(!Pattern.compile(".*"+fromStr+".*", Pattern.DOTALL).matcher(str).matches()){
+		boolean isReplace = false;
+		for(String fromStr:fromStrs){
+			if(Pattern.compile(".*"+fromStr+".*", Pattern.DOTALL).matcher(str).matches()){
+				isReplace = true;
+				str = str.replaceAll(fromStr, toStr);
+			}
+		}
+		if(isReplace){
+			return parseOutputStream(str);
+		}else{
 			return null;
 		}
-		String str2 = str.replaceAll(fromStr, toStr);
-		return parseOutputStream(str2);
 	}
 	
 	public static ByteArrayOutputStream parseWithHexWrap(String fromHex, String toHex, InputStream input) throws IOException {

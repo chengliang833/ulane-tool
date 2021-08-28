@@ -11,15 +11,22 @@ import wang.ulane.file.FileManage;
 
 public class FileChangeWrap {
 	
-	private static List<String> fileTypes = Arrays.asList("txt","ntp","scss","sass","data","vue","yml","json","css","md","java","xml","js","html","properties","svg");
+	private static List<String> fileTypes = Arrays.asList("txt","ntp","scss","less","sass","data","vue","yml","json","css","md","java","xml","js","html","properties","svg");
 	
 	private String changeType;
 	private String fromPath;
 	private String toPath;
+	private boolean executeAny;
 	public FileChangeWrap(String changeType, String fromPath, String toPath) {
 		this.changeType = changeType;
 		this.fromPath = fromPath;
 		this.toPath = toPath;
+	}
+	public FileChangeWrap(String changeType, String fromPath, String toPath, boolean executeAny) {
+		this.changeType = changeType;
+		this.fromPath = fromPath;
+		this.toPath = toPath;
+		this.executeAny = executeAny;
 	}
 
 	public void execute() throws Exception{
@@ -45,16 +52,18 @@ public class FileChangeWrap {
     }
     
     public void changeWrap(File file) throws Exception{
-    	if(!file.getPath().equals(fromPath) && !fileTypes.contains(file.getName().substring(file.getName().lastIndexOf(".")+1))){
+    	if(!executeAny 
+    			&& !file.getPath().equals(fromPath) 
+    			&& !fileTypes.contains(file.getName().substring(file.getName().lastIndexOf(".")+1))){
     		return;
     	}
     	
 //    	ByteArrayOutputStream baos = ConvertUtil.parseWithHexWrap("(?<!0d)0a", "0d0a", new FileInputStream(file));
     	ByteArrayOutputStream baos = null;
     	if("n".equals(changeType)){
-    		baos = ConvertUtil.parseWithStrWrap("\r\n", "\n", new FileInputStream(file));
+    		baos = ConvertUtil.parseWithStrWrap(new String[]{"\r\n", "\r"}, "\n", new FileInputStream(file));
     	}else if("rn".equals(changeType)){
-    		baos = ConvertUtil.parseWithStrWrap("(?<!\r)\n", "\r\n", new FileInputStream(file));
+    		baos = ConvertUtil.parseWithStrWrap(new String[]{"(?<!\r)\n", "\r"}, "\r\n", new FileInputStream(file));
     	}
     	
     	File folder;
