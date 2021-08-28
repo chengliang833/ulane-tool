@@ -16,15 +16,19 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class SendEmail {
-	private final static Properties props = new Properties();
-	static {
+	private final Properties props = new Properties();
+	
+	public SendEmail(String mail_user, String mail_password, String mail_smtp_host, String mail_smtp_port) {
 		// 表示SMTP发送邮件，需要进行身份验证
-		String mail_smtp_auth="true";
-		String mail_smtp_host="smtp.qq.com";
-		String mail_smtp_port="465";
-		String mail_user="327991647@qq.com";
-		String mail_password="";
+//		String mail_smtp_auth="true";
+//		String mail_smtp_host="smtp.qq.com";
+//		String mail_smtp_port="465";
+//		String mail_user="327991647@qq.com";
+//		String mail_password="";
 		
 //		String mail_smtp_auth="true";
 //		String mail_smtp_host="smtp-mail.outlook.com";
@@ -32,7 +36,7 @@ public class SendEmail {
 //		String mail_user="eshonulane@outlook.com";
 //		String mail_password="";
 		
-		props.put("mail.smtp.auth", mail_smtp_auth);
+		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.host", mail_smtp_host);
 		props.put("mail.smtp.port", mail_smtp_port);
 		// 发件人的账号
@@ -48,8 +52,14 @@ public class SendEmail {
 		props.setProperty("mail.smtp.socketFactory.port", "465");
 		
 	}
-
-	public void send(String title, String[] tos, String[] ccs, String fileName, String content)
+	
+	public void send(String to, String title, String content) throws MessagingException{
+		send(new String[]{to}, null, title, null, content);
+	}
+	public void send(String[] tos, String title, String content) throws MessagingException{
+		send(tos, null, title, null, content);
+	}
+	public void send(String[] tos, String[] ccs, String title, String fileName, String content)
 			throws MessagingException {
 
 		// 构建授权信息，用于进行SMTP进行身份验证
@@ -107,8 +117,7 @@ public class SendEmail {
 				mp.addBodyPart(bp2);
 				message.setContent(mp);
 			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println("增加邮件附件：发生错误！" + e);
+				log.error("增加邮件附件：发生错误！"+e.getMessage(), e);
 			}
 		}else{
 	        message.setContent(content, "text/html;charset=UTF-8");
@@ -121,15 +130,12 @@ public class SendEmail {
 	}
 
 	
-	public static void main(String[] args){
-		try {
-			System.out.println("start...");
-			new SendEmail().send("key",new String[]{"959043365@qq.com"},null,null,"key");
-//			new SendEmail().send("标题",new String[]{"959043365@qq.com"},null,null,"内容");
-			System.out.println("end...");
-		} catch (MessagingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public static void main(String[] args) throws MessagingException{
+		System.out.println("start...");
+		new SendEmail("username@a.com", "password", "smtp.ulane.cn", "465").send("327991647@qq.om", "测试邮件", "邮件内容");
+//		new SendEmail().send("key",new String[]{"959043365@qq.com"},null,null,"key");
+//		new SendEmail().send("标题",new String[]{"959043365@qq.com"},null,null,"内容");
+		System.out.println("end...");
 	}
+	
 }

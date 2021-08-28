@@ -9,6 +9,16 @@ public class NumSlider {
 	private long timeLimit = 0;
 	private int maxSize = 0;
 	
+	public NumSlider() {
+		super();
+	}
+
+	public NumSlider(long timeLimit, int maxSize) {
+		super();
+		this.timeLimit = timeLimit;
+		this.maxSize = maxSize;
+	}
+
 	public synchronized boolean pass(Long timeNew){
 		Long timestamp = clq.peek();
 		while(timestamp != null){
