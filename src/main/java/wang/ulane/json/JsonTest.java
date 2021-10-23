@@ -16,13 +16,13 @@ public class JsonTest {
 	private static ObjectMapper om = new ObjectMapper();
 	
 	static {
-		FastJsonChangeDefine.init();
+//		FastJsonChangeDefine.init();
 //		JacksonChangeDefine.init();
 		om.enable(MapperFeature.USE_STD_BEAN_NAMING);
 	}
 	
-	public static void main(String[] args) {
-		upperFilterTest(args);
+	public static void main(String[] args) throws JsonProcessingException {
+		main1(args);
 	}
 	
 	public static void upperFilterTest(String[] args){
@@ -41,19 +41,23 @@ public class JsonTest {
 		obj.put("sef", "gdsfg");
 		JsonBean b = JSON.parseObject(obj.toJSONString(), JsonBean.class);
 		b.setSdfd("sdfds");
+		b.setAb_Id("1223");
+		b.setSeFd("12");
+		b.setAbc("25353");
+		obj.put("b", b);
 		System.out.println(obj.toJSONString());
 		System.out.println(JSON.toJSONString(b));
-		//字段首字母大写
+//		//字段首字母大写
 		System.out.println(JSON.toJSONString(b, new PascalNameFilter()));
-		//使用完全原字段
-		System.out.println(JSON.toJSONString(b, new SerializeConfig(true)));
-		
-		System.out.println(om.writeValueAsString(b));
-		
-		Map<String, Object> map = new HashMap<>();
-		map.put("obj", JSON.parseObject(JSON.toJSONString(b, new PascalNameFilter())));
-		map.put("obj2", b);
-		System.out.println(JSON.toJSONString(map));
+//		//使用完全原字段
+//		System.out.println(JSON.toJSONString(b, new SerializeConfig(true)));
+//		
+//		System.out.println(om.writeValueAsString(b));
+//		
+//		Map<String, Object> map = new HashMap<>();
+//		map.put("obj", JSON.parseObject(JSON.toJSONString(b, new PascalNameFilter())));
+//		map.put("obj2", b);
+//		System.out.println(JSON.toJSONString(map));
 		
 		
 	}

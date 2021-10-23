@@ -21,4 +21,12 @@ public class Utils {
         return array;
     }
     
+    public static String locktime(){
+    	String a = "";
+    	for(int i=0; i<5000; i++){
+    		a += "sadsad"+i;
+    	}
+    	return a;
+    }
+    
 }

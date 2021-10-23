@@ -22,18 +22,28 @@ public class FileRegularChange {
 	private static String currentTable = null; 
 	private static int currentRow = 0;
 	private static String primKeyString = null;
+	private static String lastLine = null;
 	public static void mainTest() throws Exception {
 		System.out.println("start...");
-		String inputpath = "D:\\Develop\\Install\\eclipse_pristine\\workspace\\fortest\\src\\main\\resources\\abc.txt";
-		String outputpath = "D:\\Develop\\Install\\eclipse_pristine\\workspace\\fortest\\src\\main\\resources\\abc2.txt";
+		String inputpath = "D:\\Develop\\work\\document\\01_shrcb\\文档\\数据库\\20210913-DDL-shph-fmzl-no-execute.sql";
+		String outputpath = "D:\\Develop\\work\\document\\01_shrcb\\文档\\数据库\\20210913-DDL-shph-fmzl.sql";
 		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputpath), "UTF-8"));
 		PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(outputpath), "UTF-8"));
 		String line = null;
 		while((line = br.readLine()) != null){
-			line = replaceLineMysqlMigrate(line);
-			if(line != null){
-				pw.println(line);
+//			line = replaceLineMysqlMigrate(line);
+			line = replaceLine(line);
+			if(lastLine != null){
+				pw.println(lastLine);
 			}
+			lastLine = line;
+			
+//			if(line != null){
+//				pw.println(line);
+//			}
+		}
+		if(lastLine != null){
+			pw.println(lastLine);
 		}
 		br.close();
 		pw.close();
@@ -81,18 +91,35 @@ public class FileRegularChange {
 	}
 	
 	public static String replaceLine(String line){
-		if(line.matches("	private \\w* (\\w*);")){
-			line = line.replaceAll("	private \\w* (\\w*);", "$1");
-//			line = RegexUtil.replaceAll(line, "	private \\w* (\\w*);", (matchStr, matchI, matcher) -> {
-//				if(Integer.parseInt(matcher.group(1)) > 1000){
-//					return "text,";
-//				}else{
-//					return matchStr;
-//				}
-//			});
-		}else{
-			line = null;
+		if(line.startsWith("CREATE TABLE") || line.startsWith("-- CREATE TABLE")){
+			RegexUtil.replaceAll(line, "CREATE TABLE \"(.*?)\".*", (matchStr, matchI, matcher) -> {
+				currentTable = matcher.group(1);
+				System.out.println(currentTable);
+				return matchStr;
+			});
+		}else if(line.startsWith("-- =") || line.startsWith("-- -- =")){
+			line = RegexUtil.replaceAll(line.trim(), "-- =(\\w+)\\s+(.+)", (matchStr, matchI, matcher) -> {
+				return "	"+matcher.group(1).toUpperCase()+" "+matcher.group(2).toUpperCase()+",";
+			});
+		}else if(line.startsWith("-- +") || line.startsWith("-- -- +")){
+			line = RegexUtil.replaceAll(line.trim(), "-- \\+(\\w+)\\s+(.+)", (matchStr, matchI, matcher) -> {
+				return "COMMENT ON COLUMN \""+currentTable+"\".\""+matcher.group(1).toUpperCase()+"\" IS '"+matcher.group(2)+"';";
+			});
+		}else if(line.equals("   )") || line.equals("--    )")){
+			lastLine = lastLine.replace(",", "");
 		}
+//		if(line.matches("	private \\w* (\\w*);")){
+//			line = line.replaceAll("	private \\w* (\\w*);", "$1");
+////			line = RegexUtil.replaceAll(line, "	private \\w* (\\w*);", (matchStr, matchI, matcher) -> {
+////				if(Integer.parseInt(matcher.group(1)) > 1000){
+////					return "text,";
+////				}else{
+////					return matchStr;
+////				}
+////			});
+//		}else{
+//			line = null;
+//		}
 //		if(line.matches(".*float\\((\\d*)\\),.*")){
 //			line = line.replaceAll("float\\((\\d*)\\),", "float\\($1,0\\),");
 //		}
