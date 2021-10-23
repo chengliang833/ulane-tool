@@ -101,4 +101,20 @@ public class EntityT {
 			j = j + i;
 		}
 	}
+	
+	
+	
+
+	public static Integer lockNum = 8;
+	//都是锁class，不会同时更改lockNum
+	public static synchronized boolean trylock(){
+//		if(lockNum - 1 < 0){
+//			return false;
+//		}
+		lockNum--;
+		return true;
+	}
+	public static synchronized void unlock(){
+		lockNum++;
+	}
 }

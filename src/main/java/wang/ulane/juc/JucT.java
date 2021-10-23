@@ -17,16 +17,22 @@ public class JucT {
 //		CyclicBarrier cb = new CyclicBarrier(threadCount); //这个只阻塞子线程，不阻塞主线程
 		final EntityT a = new EntityT();
 		for(int i=0; i<taskCount; i++){
+			final int itemp = i % 2;
 			es.execute(new Runnable() {
 				public void run() {
 					for(int j=0; j<10000; j++){
 //						id = id + 1;
-						id++;
-						index.getAndIncrement();
+//						id++;
+//						index.getAndIncrement();
 //						index.getAndAdd(2);
 //						a.getAi().getAndIncrement();
 //						a.addA();
 //						a.addAReen();
+						if(itemp == 0){
+							a.trylock();
+						}else{
+							a.unlock();
+						}
 					}
 					cdl.countDown();
 //					try {
@@ -43,6 +49,7 @@ public class JucT {
 		System.out.println(id);
 //		System.out.println(a.getAi());
 //		System.out.println(a.getA());
+		System.out.println(a.lockNum);
 		System.out.println(index);
 		System.out.println("finish...");
 	}
