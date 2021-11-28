@@ -3,6 +3,7 @@ package wang.ulane.file;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
@@ -11,7 +12,10 @@ import java.util.jar.JarFile;
 import wang.ulane.init.PropLoad;
 
 public class TraverseFileFromSign {
-
+	
+	public static String CLASSES = "classes";
+	public static List<String> TEST_CLASSES = Arrays.asList("test-classes");
+	
 	private static List<String> getFilesFromFolder(String fromPath, String path) {
 		File fromFile = new File(fromPath+path);
 		List<String> files = new ArrayList<String>();
@@ -64,7 +68,16 @@ public class TraverseFileFromSign {
 		if(rootPath.endsWith(".jar")){
 			return getFilesFromJarFile(rootPath, path);
 		}
-		return getFilesFromFolder(rootPath, path);
+		List<String> files = new ArrayList<>();
+		for(String testPath:TEST_CLASSES){
+			if(rootPath.endsWith(testPath+"/")){
+				files.addAll(getFilesFromFolder(rootPath.replace(testPath, CLASSES), path));
+				break;
+			}
+		}
+		
+		files.addAll(getFilesFromFolder(rootPath, path));
+		return files;
 	}
 	
 	public static void main(String[] args) {

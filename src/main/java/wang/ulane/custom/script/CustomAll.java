@@ -45,6 +45,9 @@ public class CustomAll {
 			case "file_changewrap_rn":
 				new FileChangeWrap("rn", param1, param2).execute();
 				break;
+			case "file_list":
+				new FileListAll(param1, param2).execute();
+				break;
 			case "int_to_hex":
 				System.out.print(NumericalConversion.intToHex(Integer.parseInt(param1)));;
 				break;
