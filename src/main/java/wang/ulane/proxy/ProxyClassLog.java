@@ -24,9 +24,9 @@ public class ProxyClassLog extends ProxyClass{
 	public static void proxyMethodLog(Map<String, List<MethodParam>> map){
 		for(String key:map.keySet()){
 			for(MethodParam mp:map.get(key)){
-				if(mp.getCustomFullMethodName() == null){
-					mp.setBeforeBody(generateBeforeStr(key, mp.getMethodName(), mp.getParams()));
-					mp.setAfterBody(generateAfterStr(key, mp.getMethodName(), mp.getParams()));
+				if(mp.getProxyType() == MethodParamTypeEnum.BEFOR_AFTER_BODY_STR){
+					mp.setBeforeContent(generateBeforeStr(key, mp.getMethodName(), mp.getParams()));
+					mp.setAfterContent(generateAfterStr(key, mp.getMethodName(), mp.getParams()));
 				}
 			}
 			proxyMethod(key, map.get(key).toArray(new MethodParam[]{}));
@@ -35,8 +35,8 @@ public class ProxyClassLog extends ProxyClass{
 	
 	public static void proxyMethodLog(String classFullName, MethodParam... mps){
 		for(MethodParam mp:mps){
-			mp.setBeforeBody(generateBeforeStr(classFullName, mp.getMethodName(), mp.getParams()));
-			mp.setAfterBody(generateAfterStr(classFullName, mp.getMethodName(), mp.getParams()));
+			mp.setBeforeContent(generateBeforeStr(classFullName, mp.getMethodName(), mp.getParams()));
+			mp.setAfterContent(generateAfterStr(classFullName, mp.getMethodName(), mp.getParams()));
 		}
 		proxyMethod(classFullName, mps);
 	}

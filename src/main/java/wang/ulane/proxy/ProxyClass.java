@@ -10,7 +10,9 @@ import java.util.Properties;
 import java.util.Set;
 
 import javassist.ClassPool;
+import javassist.CtBehavior;
 import javassist.CtClass;
+import javassist.CtConstructor;
 import javassist.CtMethod;
 import javassist.NotFoundException;
 import javassist.bytecode.AccessFlag;
@@ -57,27 +59,38 @@ public class ProxyClass {
 		if(mp.getParams() != null && mp.getParams().length > 0){
 			ctParams = new CtClass[mp.getParams().length];
 		}
-		CtMethod m = getSignMethod(pool, mp.getMethodName(), mp.getParams(), ctParams, ct);
+		CtBehavior c = getSignMethod(pool, mp.getMethodName(), mp.getParams(), ctParams, ct);
 		//无返回值直接前后加就行，放弃，兼容ProxyClassLog前后变量关联
 //		if(m.getReturnType().getName().equals("void")){
 //			m.insertBefore(beforeBody);
 //			m.insertAfter("String result = null;"+afterBody);
 //		}else{
+//		}
+		if(c instanceof CtMethod){
+			CtMethod m = (CtMethod) c;
 			createProxyMethod(m, mp.getMethodName(), ctParams, ct);
 			changeOriginalMethod(m, ctParams, ct, mp);
-//		}
+		}else if(c instanceof CtConstructor){
+//			CtConstructor cm = (CtConstructor) c;
+//			cm.insertAfter("System.out.println($0);");
+////			ct.writeFile();
+		}
 	}
 	
-	protected static CtMethod getSignMethod(ClassPool pool, String methodName, @SuppressWarnings("rawtypes") Class[] params, CtClass[] ctParams, CtClass ct) throws NotFoundException{
-		CtMethod m = null;
-		if(params != null && params.length > 0){
-			for(int i=0,length=params.length; i<length; i++){
-				ctParams[i] = pool.getCtClass(params[i].getCanonicalName());
+	protected static CtBehavior getSignMethod(ClassPool pool, String methodName, @SuppressWarnings("rawtypes") Class[] params, CtClass[] ctParams, CtClass ct) throws NotFoundException{
+		CtBehavior m = null;
+		try {
+			if(params != null && params.length > 0){
+				for(int i=0,length=params.length; i<length; i++){
+					ctParams[i] = pool.getCtClass(params[i].getCanonicalName());
+				}
+				// 获取被修改的方法
+				m = ct.getDeclaredMethod(methodName, ctParams);
+			}else{
+				m = ct.getDeclaredMethod(methodName);
 			}
-			// 获取被修改的方法
-			m = ct.getDeclaredMethod(methodName, ctParams);
-		}else{
-			m = ct.getDeclaredMethod(methodName);
+		} catch (NotFoundException e) {
+			m = ct.getDeclaredConstructor(ctParams);
 		}
 		return m;
 	}
@@ -138,10 +151,10 @@ public class ProxyClass {
 		mStr.append(mp.getMethodName()).append("(");
 		
 		String funcStr = null;
-		if(mp.getCustomFullMethodName() == null){
-			funcStr = generateParamAndBodyString(mStr, m, mp.getMethodName(), ctParams, mp.getBeforeBody(), mp.getAfterBody());
-		}else{
-			funcStr = generateParamAndBodyMethod(mStr, m, mp.getMethodName(), ctParams, mp.getCustomFullMethodName());
+		if(mp.getProxyType() == MethodParamTypeEnum.BEFOR_AFTER_BODY_STR){
+			funcStr = generateParamAndBodyString(mStr, m, mp.getMethodName(), ctParams, mp.getBeforeContent(), mp.getAfterContent());
+		}else if(mp.getProxyType() == MethodParamTypeEnum.AROUND_FULL_NAME){
+			funcStr = generateParamAndBodyMethod(mStr, m, mp.getMethodName(), ctParams, mp.getCustomAround());
 		}
 		
 		//直接setBody不能对应形参名
@@ -282,10 +295,9 @@ public class ProxyClass {
 		}
 	}
 	
-	
-	
-	
-	
+	protected static void generateBeforeAfterMethod(CtMethod m, CtClass[] ctParams, CtClass ct, MethodParam mp){
+		
+	}
 	
 	
 	

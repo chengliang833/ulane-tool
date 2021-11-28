@@ -1,6 +1,15 @@
 package wang.ulane.proxy;
 
 public class BeanTest {
+	
+	public BeanTest() {
+		super();
+	}
+	
+	public BeanTest(int id) {
+		super();
+		this.id = id;
+	}
 
 	public static void test() {
 		System.out.println(3243);

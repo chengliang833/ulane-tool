@@ -9,6 +9,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpPost;
+
 public class TestMain {
 	
 	static {
@@ -23,16 +26,21 @@ public class TestMain {
 //				new MethodParam("testChar", Integer.class),
 //				new MethodParam("testBoolean", Integer.class)
 //				);
-		ProxyClass.initClass("app.properties", "logext.proxys.initclass");
-		Map<String, List<MethodParam>> map = ProxyClass.getMethodList("app.properties", "logext.proxys.list");
-		ProxyClassLog.proxyMethodLog(map);
+//		ProxyClass.initClass("app.properties", "logext.proxys.initclass");
+//		Map<String, List<MethodParam>> map = ProxyClass.getMethodList("app.properties", "logext.proxys.list");
+//		ProxyClassLog.proxyMethodLog(map);
 		
 //		ProxyClass.proxyMethod("wang.ulane.proxy.BeanTest", 
 //				new MethodParam("test", "wang.ulane.proxy.TestMain.testProxy", Integer.class, Integer.class, Integer.class)
 //				);
+		ProxyClass.addRelateClassPath(HttpEntityEnclosingRequestBase.class);
+		ProxyClass.proxyMethod("org.apache.http.client.methods.HttpPost", 
+				new MethodParam("HttpPost", "wang.ulane.proxy.TestMain.testProxy", String.class)
+				);
 	}
 	
 	public static void main(String[] args) throws Exception {
+		System.out.println("2:"+new HttpPost("http://www.baicu.com"));
 //		BeanTest.test(2132L);
 //		BeanTest.test(new Integer(3));
 //		System.out.println("---");
@@ -75,7 +83,7 @@ public class TestMain {
 //		
 //		System.out.println("---");
 //		System.out.println(bt.id);
-//		System.out.println("finish...");
+		System.out.println("finish...");
 	}
 	
 	public static Object testProxy(ProxyPoint proxyPoint) throws Exception{
