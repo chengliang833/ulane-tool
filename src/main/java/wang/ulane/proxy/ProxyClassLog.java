@@ -24,7 +24,7 @@ public class ProxyClassLog extends ProxyClass{
 	public static void proxyMethodLog(Map<String, List<MethodParam>> map){
 		for(String key:map.keySet()){
 			for(MethodParam mp:map.get(key)){
-				if(mp.getProxyType() == MethodParamTypeEnum.BEFOR_AFTER_BODY_STR){
+				if(mp.getProxyType() == MethodParamTypeEnum.AROUND_TWO_BODY_STR){
 					mp.setBeforeContent(generateBeforeStr(key, mp.getMethodName(), mp.getParams()));
 					mp.setAfterContent(generateAfterStr(key, mp.getMethodName(), mp.getParams()));
 				}

@@ -6,12 +6,16 @@ public enum MethodParamTypeEnum {
 	 */
 	AROUND_FULL_NAME,
 	/**
-	 * before after方法体
+	 * around下，before after方法体
 	 */
-	BEFOR_AFTER_BODY_STR,
+	AROUND_TWO_BODY_STR,
 	/**
 	 * before after全方法名
 	 */
 	BEFOR_AFTER_FULL_NAME;
+	
+	public static boolean isAround(MethodParamTypeEnum methodParamTypeEnum){
+		return methodParamTypeEnum == AROUND_FULL_NAME || methodParamTypeEnum == AROUND_TWO_BODY_STR;
+	}
 	
 }

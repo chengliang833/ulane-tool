@@ -59,28 +59,24 @@
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.4</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>druid</artifactId>
 			<version>1.0.9</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.13</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<version>2.9.7</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>
@@ -88,7 +84,6 @@
 			<version>2.2.3</version>
 			<classifier>jdk13</classifier>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -96,7 +91,6 @@
 			<artifactId>bcprov-jdk15on</artifactId>
 			<version>1.55</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -118,14 +112,12 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>3.2.8.RELEASE</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.4</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -139,49 +131,42 @@
 			<artifactId>mybatis-spring</artifactId>
 			<version>1.2.3</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis</artifactId>
 			<version>3.2.5</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
 			<version>3.2.8.RELEASE</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.13</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjtools</artifactId>
 			<version>1.9.6</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjweaver</artifactId>
 			<version>1.9.6</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
 			<version>1.9.6</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>
@@ -189,7 +174,6 @@
 			<version>2.4</version>
 			<classifier>jdk15</classifier>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 
 
@@ -197,7 +181,6 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.0.1</version>
-			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -205,14 +188,12 @@
 			<artifactId>jsp-api</artifactId>
 			<version>2.1</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -220,7 +201,6 @@
 			<artifactId>quartz-jobs</artifactId>
 			<version>2.2.1</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -228,7 +208,6 @@
 			<artifactId>spring-context-support</artifactId>
 			<version>4.1.6.RELEASE</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -236,7 +215,6 @@
 			<artifactId>quartz</artifactId>
 			<version>2.2.3</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 
        <!-- xml start -->
@@ -245,14 +223,12 @@
 		    <artifactId>dom4j</artifactId>
 		    <version>2.1.1</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 		    <groupId>jaxen</groupId>
 		    <artifactId>jaxen</artifactId>
 		    <version>1.2.0</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
        <!-- xml end -->
        
@@ -261,7 +237,6 @@
 			<artifactId>bcprov-ext-jdk16</artifactId>
 			<version>1.46</version>
 			<type>jar</type>
-			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
 		
@@ -277,7 +252,6 @@
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.2.2</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -285,7 +259,6 @@
 			<artifactId>commons-pool2</artifactId>
 			<version>2.2</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 		
 		<dependency>
@@ -293,20 +266,19 @@
 			<artifactId>commons-httpclient</artifactId>
 			<version>3.0.1</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5.2</version>
-			<scope>provided</scope>
             <exclusions>
                 <exclusion>
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
+			<optional>true</optional>
         </dependency>
 
 		<dependency>
@@ -314,7 +286,6 @@
 			<artifactId>quartz</artifactId>
 			<version>2.2.3</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 
   		<dependency>
@@ -322,7 +293,6 @@
 			<artifactId>camel-ftp</artifactId>
 			<version>2.13.2</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -330,7 +300,6 @@
 			<artifactId>sdk4j</artifactId>
 			<version>1.1</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>
@@ -356,21 +325,18 @@
 		    <artifactId>jxl</artifactId>
 		    <version>2.6.12</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
             <version>3.17</version>
 			<optional>true</optional>
-			<scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>3.17</version>
 			<optional>true</optional>
-			<scope>provided</scope>
         </dependency>
 		
         <dependency>
@@ -385,7 +351,6 @@
 			<artifactId>mail</artifactId>
 			<version>1.4</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 		
 		<dependency>
@@ -393,7 +358,6 @@
 		    <artifactId>jol-core</artifactId>
 		    <version>0.9</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 		
 		<dependency>
@@ -407,7 +371,6 @@
 		    <artifactId>ojdbc8</artifactId>
 		    <version>19.3.0.0</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 		
 		<dependency>
@@ -415,7 +378,6 @@
 			<artifactId>ftpserver-core</artifactId>
 			<version>1.1.1</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 		
 		<dependency>
@@ -423,7 +385,6 @@
 		    <artifactId>javassist</artifactId>
 		    <version>3.27.0-GA</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 		
 		<dependency>
@@ -431,7 +392,6 @@
 			<artifactId>disruptor</artifactId>
 			<version>3.2.1</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 		
 		<!-- for email -->
@@ -440,14 +400,12 @@
 		    <artifactId>commons-net</artifactId>
 		    <version>3.8.0</version>
    			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 		    <groupId>dnsjava</groupId>
 		    <artifactId>dnsjava</artifactId>
 		    <version>3.4.1</version>
 			<optional>true</optional>
-			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	
@@ -471,7 +429,7 @@
 			    <encoding>UTF-8</encoding>
 			  </configuration>
 			</plugin>
-			<plugin>
+<!-- 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>2.5.5</version>
@@ -479,15 +437,13 @@
 					<archive>
 						<manifest>
 							<mainClass>wang.ulane.custom.script.CustomAll</mainClass>
-							<!-- <mainClass>wang.ulane.xml.XmlLoad</mainClass> -->
-							<!-- <mainClass>wang.ulane.file.TraverseFileFromSign</mainClass> -->
 						</manifest>
 					</archive>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
 				</configuration>
-			</plugin>
+			</plugin> -->
 	    </plugins>
 	</build>
 	

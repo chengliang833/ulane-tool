@@ -35,7 +35,7 @@ public class TestMain {
 //				);
 		ProxyClass.addRelateClassPath(HttpEntityEnclosingRequestBase.class);
 		ProxyClass.proxyMethod("org.apache.http.client.methods.HttpPost", 
-				new MethodParam("HttpPost", "wang.ulane.proxy.TestMain.testProxy", String.class)
+				new MethodParam("HttpPost", MethodParamTypeEnum.BEFOR_AFTER_FULL_NAME, null, "wang.ulane.proxy.TestMain.testAfter", String.class)
 				);
 	}
 	
@@ -96,5 +96,8 @@ public class TestMain {
 		System.out.println("after:"+result);
 		return result;
 	}
-	
+
+	public static void testAfter(Object _this) throws Exception{
+		System.out.println("after:"+_this);
+	}
 }

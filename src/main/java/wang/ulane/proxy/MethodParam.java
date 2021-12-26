@@ -1,5 +1,7 @@
 package wang.ulane.proxy;
 
+import java.util.Arrays;
+
 public class MethodParam{
 	/**
 	 * 要代理的方法名
@@ -24,12 +26,12 @@ public class MethodParam{
 	private String customAround;
 	/**
 	 * 代理方法之前执行部分
-	 * proxyType == MethodParamTypeEnum.BEFOR_AFTER_BODY_STR
+	 * proxyType == MethodParamTypeEnum.BEFOR_AFTER_BODY_STR || BEFOR_AFTER_FULL_NAME
 	 */
 	private String beforeContent;
 	/**
 	 * 代理方法之后执行部分
-	 * proxyType == MethodParamTypeEnum.BEFOR_AFTER_BODY_STR
+	 * proxyType == MethodParamTypeEnum.BEFOR_AFTER_BODY_STR || BEFOR_AFTER_FULL_NAME
 	 */
 	private String afterContent;
 	
@@ -55,6 +57,15 @@ public class MethodParam{
 		this.params = params;
 		this.proxyType = MethodParamTypeEnum.AROUND_FULL_NAME;
 	}
+
+	public MethodParam(String methodName, MethodParamTypeEnum methodParamTypeEnum, String beforeBody, String afterBody, @SuppressWarnings("rawtypes") Class... params) {
+		super();
+		this.methodName = methodName;
+		this.params = params;
+		this.beforeContent = beforeBody;
+		this.afterContent = afterBody;
+		this.proxyType = methodParamTypeEnum;
+	}
 	
 	@Deprecated
 	public MethodParam(String methodName, String beforeBody, String afterBody, @SuppressWarnings("rawtypes") Class[] params) {
@@ -63,7 +74,7 @@ public class MethodParam{
 		this.params = params;
 		this.beforeContent = beforeBody;
 		this.afterContent = afterBody;
-		this.proxyType = MethodParamTypeEnum.BEFOR_AFTER_BODY_STR;
+		this.proxyType = MethodParamTypeEnum.AROUND_TWO_BODY_STR;
 	}
 	
 	public String getMethodName() {
@@ -102,6 +113,13 @@ public class MethodParam{
 	}
 	public void setAfterContent(String afterContent) {
 		this.afterContent = afterContent;
+	}
+
+	@Override
+	public String toString() {
+		return "MethodParam [methodName=" + methodName + ", params=" + Arrays.toString(params) + ", proxyType="
+				+ proxyType + ", customAround=" + customAround + ", beforeContent=" + beforeContent + ", afterContent="
+				+ afterContent + "]";
 	}
 	
 }
