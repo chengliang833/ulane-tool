@@ -17,6 +17,10 @@ import javassist.CtMethod;
 import javassist.NotFoundException;
 import wang.ulane.util.StringUtils;
 
+/**
+ * 代理class
+ * 可参考 bytebuddy包
+ */
 public class ProxyClass {
 	
 	/**
