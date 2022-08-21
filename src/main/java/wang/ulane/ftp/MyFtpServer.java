@@ -18,7 +18,8 @@ public class MyFtpServer {
 //		args = new String[]{"D:\\Download\\D__Temp","211.159.185.18","27922"};
 		DataConnectionConfigurationFactory dataFac = new DataConnectionConfigurationFactory();
 		ListenerFactory factory = new ListenerFactory();
-		factory.setPort(2121);
+		factory.setPort(21);
+		dataFac.setPassivePorts("21");
 		
 		ConnectionConfigFactory connectionConfigFactory = new ConnectionConfigFactory();
 		connectionConfigFactory.setAnonymousLoginEnabled(true);
@@ -31,8 +32,10 @@ public class MyFtpServer {
 			case 0: 
 				user.setHomeDirectory("E:\\");
 				break;
+			case 4:
+				dataFac.setPassivePorts(args[3]);
 			case 3:
-				dataFac.setPassivePorts(args[2]);
+				factory.setPort(Integer.parseInt(args[2]));
 			case 2:
 				dataFac.setPassiveExternalAddress(args[1]);
 //				System.out.println(dataFac.getActiveLocalPort());
