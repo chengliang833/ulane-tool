@@ -372,6 +372,12 @@
 		    <version>19.3.0.0</version>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+		   <groupId>cn.easyproject</groupId>
+		   <artifactId>orai18n</artifactId>
+		   <version>12.1.0.2.0</version>
+			<optional>true</optional>
+		</dependency>
 		
 		<dependency>
 			<groupId>org.apache.ftpserver</groupId>
@@ -407,6 +413,21 @@
 		    <version>3.4.1</version>
 			<optional>true</optional>
 		</dependency>
+		
+		<!-- 数据库文档生成 -->
+		<dependency>
+			<groupId>cn.smallbun.screw</groupId>
+			<artifactId>screw-core</artifactId>
+			<version>1.0.5</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>3.2.0</version>
+			<optional>true</optional>
+		</dependency>
+    
 	</dependencies>
 	
 	<build>
