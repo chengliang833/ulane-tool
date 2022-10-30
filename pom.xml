@@ -110,7 +110,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>3.2.8.RELEASE</version>
+			<version>5.2.8.RELEASE</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -427,7 +427,14 @@
 			<version>3.2.0</version>
 			<optional>true</optional>
 		</dependency>
-    
+		
+	    <!-- https://mvnrepository.com/artifact/org.apache.dubbo/dubbo -->
+<!--		<dependency>
+		    <groupId>org.apache.dubbo</groupId>
+		    <artifactId>dubbo</artifactId>
+		    <version>2.7.15</version>
+		</dependency> -->
+		    
 	</dependencies>
 	
 	<build>
