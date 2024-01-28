@@ -3,8 +3,9 @@ package wang.ulane.util;
 import java.net.InetAddress;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -48,7 +49,40 @@ public class DataUtil {
 			return numArr[0].replaceAll("(\\d)(?=(?:\\d{3})+$)", "$1,") + "." + numArr[1].substring(0, cent);
 		}
 	}
-	
+
+	public static <T> List<T> listToTree(List<T> arr, Function<T, Object> idFun, Function<T, Object> pidFun, Function<T, List<T>> childFun, BiConsumer<T, List<T>> childCon){
+		Map<Object, T> arrAllMap = new HashMap<>();
+		// 将数组转为Object的形式，key为数组中的id
+		for (int i = 0; i < arr.size(); i++) {
+			T item = arr.get(i);
+			arrAllMap.put(idFun.apply(item), item);
+		}
+		return listToTree(arr, arrAllMap, pidFun, childFun, childCon);
+	}
+
+	public static <T> List<T> listToTree(List<T> arr, Map<? extends Object, T> arrAllMap, Function<T, Object> pidFun, Function<T, List<T>> childFun, BiConsumer<T, List<T>> childCon) {
+		List<T> r = new ArrayList();
+		// 遍历结果集
+		for (int j = 0, length=arr.size(); j < length; j++) {
+			// 单条记录
+			T aVal = arr.get(j);
+			// 在hash中取出key为单条记录中pid的值
+			T hashVP = pidFun.apply(aVal) == null ? null : arrAllMap.get(pidFun.apply(aVal));
+			// 如果记录的pid存在，则说明它有父节点，将她添加到孩子节点的集合中
+			if (hashVP != null) {
+				// 检查是否有child属性
+				List<T> ch = childFun.apply(hashVP);
+				if (ch == null) {
+					ch = new ArrayList<>();
+					childCon.accept(hashVP, ch);
+				}
+				ch.add(aVal);
+			} else {
+				r.add(aVal);
+			}
+		}
+		return r;
+	}
 
 	public static JSONArray listToTree(JSONArray arr, String id, String pid, String child) {
 		JSONArray r = new JSONArray();

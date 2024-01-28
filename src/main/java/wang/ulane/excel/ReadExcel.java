@@ -115,23 +115,24 @@ public class ReadExcel {
                         	break cont1;
                         }
                         if (cell != null) {
-                            int type = cell.getCellType();
+                        	int type = 0;
+//                            int type = cell.getCellType();
                             String value = "";
-                            if (type == Cell.CELL_TYPE_STRING) {
-                                value = cell.getStringCellValue();
-                            } else if (type == Cell.CELL_TYPE_NUMERIC || type == Cell.CELL_TYPE_FORMULA) {
-                        		try {
-                        			value = String.valueOf(new Double(cell.getNumericCellValue()).intValue());
-                        		} catch (IllegalStateException e) {
-                        			try {
-                        				value = String.valueOf(cell.getRichStringCellValue());
-                        			} catch (Exception e2) {
-                        				value = "";
-                        			}
-                        		}
-                            } else if (type == Cell.CELL_TYPE_BOOLEAN) {
-                                value = String.valueOf(cell.getBooleanCellValue());
-                            }
+//                            if (type == Cell.CELL_TYPE_STRING) {
+//                                value = cell.getStringCellValue();
+//                            } else if (type == Cell.CELL_TYPE_NUMERIC || type == Cell.CELL_TYPE_FORMULA) {
+//                        		try {
+//                        			value = String.valueOf(new Double(cell.getNumericCellValue()).intValue());
+//                        		} catch (IllegalStateException e) {
+//                        			try {
+//                        				value = String.valueOf(cell.getRichStringCellValue());
+//                        			} catch (Exception e2) {
+//                        				value = "";
+//                        			}
+//                        		}
+//                            } else if (type == Cell.CELL_TYPE_BOOLEAN) {
+//                                value = String.valueOf(cell.getBooleanCellValue());
+//                            }
 
                             Field fieldValue = t.getClass().getDeclaredField(attributeName);
                             fieldValue.setAccessible(true);

@@ -9,9 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.openxml4j.opc.OPCPackage;
-import org.apache.poi.poifs.filesystem.NPOIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -127,21 +124,21 @@ public class WriteExcel {
     public static Workbook getWorkbok(File file) throws IOException{
         Workbook wb = null;
 //        FileInputStream in = new FileInputStream(file);
-        try {
-			if (file.getName().endsWith(EXCEL_XLS)) { //Excel&nbsp;2003
-				NPOIFSFileSystem fs = new NPOIFSFileSystem(file);
-				wb = new HSSFWorkbook(fs.getRoot(), true);
-				
-//				wb = new HSSFWorkbook(in);
-			} else if (file.getName().endsWith(EXCEL_XLSX)) { // Excel 2007/2010
-				OPCPackage pkg = OPCPackage.open(file);
-				wb = new XSSFWorkbook(pkg);
-				
-//				wb = new XSSFWorkbook(in);
-			} 
-		} catch (Exception e) {
-//			e.printStackTrace();
-		}
+//        try {
+//			if (file.getName().endsWith(EXCEL_XLS)) { //Excel&nbsp;2003
+//				NPOIFSFileSystem fs = new NPOIFSFileSystem(file);
+//				wb = new HSSFWorkbook(fs.getRoot(), true);
+//				
+////				wb = new HSSFWorkbook(in);
+//			} else if (file.getName().endsWith(EXCEL_XLSX)) { // Excel 2007/2010
+//				OPCPackage pkg = OPCPackage.open(file);
+//				wb = new XSSFWorkbook(pkg);
+//				
+////				wb = new XSSFWorkbook(in);
+//			} 
+//		} catch (Exception e) {
+////			e.printStackTrace();
+//		}
         if(wb == null){
 			wb = new XSSFWorkbook();
 			wb.createSheet();
