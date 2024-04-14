@@ -20,6 +20,8 @@ public class StringUtils {
 		strs = strs.stream().filter(o->!StringUtils.isEmpty(o)).collect(Collectors.toList());
 		if(strs.size() == 0){
 			throw new IllegalArgumentException("未找到字符串列表");
+		}else if(strs.size() == 1){
+			return "";
 		}
 
 		int i = 0;
