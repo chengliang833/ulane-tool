@@ -251,7 +251,7 @@
 		    <version>2.3</version>
 			<optional>true</optional>
 		</dependency> -->
-		
+
 		<dependency>
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
@@ -349,7 +349,24 @@
             <version>4.1.2</version>
 			<optional>true</optional>
         </dependency>
-		
+		<!--poi html渲染插件 -->
+		<dependency>
+			<groupId>io.github.draco1023</groupId>
+			<artifactId>poi-tl-ext</artifactId>
+			<version>0.3.3</version>
+			<optional>true</optional>
+			<!-- <exclusions>
+				<exclusion>
+					<groupId>com.deepoove</groupId>
+					<artifactId>poi-tl</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.poi</groupId>
+					<artifactId>ooxml-schemas</artifactId>
+				</exclusion>
+			</exclusions> -->
+		</dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -469,23 +486,6 @@
 			<artifactId>ooxml-schemas</artifactId>
 			<version>1.4</version>
 		</dependency> -->
-		<!--html渲染插件 -->
-		<dependency>
-			<groupId>io.github.draco1023</groupId>
-			<artifactId>poi-tl-ext</artifactId>
-			<version>0.3.3</version>
-			<optional>true</optional>
-			<!-- <exclusions>
-				<exclusion>
-					<groupId>com.deepoove</groupId>
-					<artifactId>poi-tl</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.poi</groupId>
-					<artifactId>ooxml-schemas</artifactId>
-				</exclusion>
-			</exclusions> -->
-		</dependency>
 	    
 	</dependencies>
 	
